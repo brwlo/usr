@@ -1,0 +1,5 @@
+#!/bin/bash
+read input </dev/stdin
+echo $input | /usr/bin/xclip -i -selection clipboard
+echo $input | /usr/bin/xclip -i -selection primary
+echo $input | /usr/bin/xclip -i -selection secondary

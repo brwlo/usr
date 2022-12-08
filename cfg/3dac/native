@@ -1,0 +1,8 @@
+#!/bin/bash
+
+home=$HOME HOME=$var/ffox
+cd $ram
+curl -fsSl \
+  https://raw.githubusercontent.com/tridactyl/native_messenger/master/installers/install.sh \
+  -o trinativeinstall.sh && sh trinativeinstall.sh 1.22.1
+rm trinativeinstall.sh

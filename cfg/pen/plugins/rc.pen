@@ -1,0 +1,395 @@
+"rc.pen
+
+  delgr plugin-rc | gr rc | gr! rc
+
+"commands
+
+  com! mapn -nargs * map -b -m n <args>
+  com! xo -nargs * -complete url -j commands.execute('o ' +args);
+  com! xt -nargs * -complete url -j commands.execute('t ' +args);
+  com! xx -nargs * -complete url -j commands.execute('t! '+args);
+  com! Restart -nargs 0 restart ++cmd 'se rtp=$cm/pen/ | lpl (js|pen)$'
+
+  js hints.addMode('k', 'reverse img (o)', e=>{commands.execute('xo k '+e.src)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('K', 'reverse img (t)', e=>{commands.execute('xt k '+e.src)}, node=>{if (node !== -1) return true; return false})
+
+  "main > video (vid)
+  js if (!modes.VIDEO) {
+  \modes.addMode('VIDEO',
+  \ {char: 'vid',
+  \  description: 'bw: manipulate youtube videos.',
+  \  bases: [modes.MAIN]},
+  \  "")}
+  com! YtPlay o javascript:(function() {content.document.getElementById('movie_player').playVideo()})()
+  com! YtPause o javascript:(function() {content.document.getElementById('movie_player').pauseVideo()})()
+  com! YtStop o javascript:(function() {content.document.getElementById('movie_player').stopVideo()})()
+  com! YtSeek -nargs=1 o javascript:(function() {vid=content.document.getElementById('movie_player');vid.seekTo(vid.getCurrentTime()+(<args>),true)})()
+  map -b -m n <l1>v -j modes.push(modes.VIDEO)
+  map -b -m vid <a-s> -ex bufdo YtPause
+  map -b -m vid <a-,> -ex YtSeek -1
+  map -b -m vid <a-l> -ex YtSeek 1
+  map -b -m vid , -ex YtSeek -5
+  map -b -m vid l -ex YtSeek 5
+  map -b -m vid -c d -j commands.execute("exe 'YtSeek "+30*(count ? count:1)+"'");
+  map -b -m vid -c u -j commands.execute("exe 'YtSeek -"+30*(count ? count:1)+"'");
+  map -b -m vid -c <s-,> -j commands.execute("exe 'YtSeek -"+60*(count ? count:1)+"'");
+  map -b -m vid -c L -j commands.execute("exe 'YtSeek "+60*(count ? count:1)+"'");
+
+"config
+
+ js editor.defaultRegister='*+'
+ js storage.infoPath._path='/home/bw/u/v/palemoon/pentadactyl/info/'+prefs.get('bw.profile')
+
+ colo colors1
+ hi MOW -a margin-bottom: 1em;
+ sty -n chrome chrome* [id*=status4evar] {display: none !important;}
+
+ se bh dls=+date hlf hm+=transliterated go=sC more msgs=20 noif notmo stal=never
+ se au=!/ex/(se|js),.*
+ se cpt=bookmark,history
+ se editor="$term -e 'n <file>'"
+ se rtp="$cm/pen"
+ se si=cache,cookies,messages,options,passwords,registers,sessions,sitesettings
+" se ss=cache,cookies,messages
+ exe 'se titlestring=<' + prefs.get('bw.profile') + '>'
+
+ ".hints
+ js
+ \ ['aba','Aba','ABA','rrow','tn','utton','otao','aret','heckbox','lose',
+ \ 'ollaps','con','mg','mage','enu','ext','ost','elec','lide','rint','witch',
+ \ 'weet','homp','bt','ufi'].forEach(
+ \ str => commands.execute('se ht+=[class*='+str+']')
+ \ )
+
+ se ht+=[class*=enu]>li
+ se ht+=summary
+ se ht+=.soundItem
+ se ht+=[id*=imprimir]
+ se ht+=[id*=lose]
+ se ht+=[id*=lide]
+ se ht+=[name*=elec]
+ se ht+=[name*=adio]
+ se ht+=[style*=ackground]
+ se ht+=[contenteditable]
+ se eht+=[F]:.js-last-tabstop
+ se eht+=[iIkK]:img,[style*=background-image]
+
+"prefs
+
+ "downloads
+ se! bw.dwn='/dev/shm'
+ se! browser.download.folderList=2
+ se! browser.download.useDownloadDir=true
+ exe 'se! browser.download.dir=' + prefs.get('bw.dwn')
+ exe 'se! browser.download.downloadDir=' + prefs.get('bw.dwn')
+ exe 'se! browser.download.lastDir=' + prefs.get('bw.dwn')
+
+ "media
+ se! accessibility.blockautorefresh=false
+ se! browser.sessionstore.max_tabs_undo=10
+ se! javascript.enabled=false
+ se! media.autoplay.allowscripted=false
+ se! media.autoplay.enabled=false
+ se! media.block-autoplay-until-in-foreground=true
+ se! media.block-play-until-visible=true
+
+ "other
+ se! browser.startup.homepage=tinyurl.com/ooudura
+ se! browser.cache.disk.enable=false
+ se! geo.enabled=false
+
+ "webdide
+" prevents installation of valence and ADBHelper?
+" https://forum.palemoon.org/viewtopic.php?t=18681
+ se! devtools.webide.enabled=false
+ se! devtools.webide.autoinstallADBHelper=false
+ se! devtools.webide.autoinstallFxdtAdapters=false
+" se! devtools.webide.autoConnectRuntime=false
+
+ ".scheduled
+
+ if (prefs.get('bw.ts').substring(6,8) == 01 &&
+ \   prefs.get('bw.updates.prefs.month') < 1)
+ \  || prefs.get('bw.updates.prefs.applied') !='yes'
+
+ se! bw.updates.prefs.month+=1
+ se! bw.updates.prefs.applied='yes'
+
+ "general
+ se! browser.cache.disk.smart_size.first_run=false
+ se! browser.cache.disk.smart_size_cached_value=307200
+ se! browser.cache.memory.capacity=51200
+ se! browser.display.standalone_images.background_color=black;
+ se! browser.link.open_newwindow.restriction=0
+ se! browser.search.openintab=true
+ se! browser.sessionstore.max_tabs_undo=50
+ se! browser.sessionstore.max_windows_undo=10
+ se! browser.startup.page=3
+ se! browser.tabs.animate=false
+ se! browser.tabs.closeWindowWithLastTab=false
+ se! browser.tabs.insertRelatedAfterCurrent=true
+ se! browser.tabs.warnOnClose=false
+ se! browser.tabs.warnOnCloseOtherTabs=false
+ se! browser.tabs.warnOnOpen=false
+ se! browser.urlbar.maxRichResults=50
+ se! general.useragent.locale=en-US
+ se! javascript.options.mem.gc_incremental_slice_ms=20
+ se! pdfjs.disabled=true
+
+ "security
+ se! dom.disable_window_open_feature.menubar=true
+ se! dom.disable_window_open_feature.personalbar=true
+ se! dom.disable_window_open_feature.scrollbars=true
+ se! dom.disable_window_open_feature.titlebar=true
+ se! dom.disable_window_open_feature.toolbar=true
+ se! dom.event.contextmenu.enabled=false
+ se! security.xpconnect.plugin.unrestricted=false
+
+ "punycode
+ se! browser.identity.display_punycode=2
+ se! network.IDN_show_punycode=true
+
+ "privacy
+ se! browser.cache.disk_cache_ssl=false
+ se! privacy.donottrackheader.enabled=true
+
+ elif prefs.get('bw.ts').substring(6,8) != 01
+  se! bw.updates.prefs.month&
+ fi
+
+"autocommands
+ au PageLoadPre (txt|js|vim|vmp|pen.*|nt|note)$ setl enc=UTF-8
+
+"marks
+
+ js services.browserSearch.getEngines().forEach(function(e) e.hidden=true)
+ sil bmark -T src -k s -t 'src: ddg' ddg.gg/?q=%s
+" sil bmark -T src -k s -t 'src: ddg' html.duckduckgo.com/html/?q=%s
+ se defsearch=s
+
+ sil qma U	~/u
+ sil qma M	~/u/m/
+ sil qma D	~/u/v/downloads/
+ sil qma S	~/u/v/captures/
+ sil qma Y	youtube.com/channel/UCq1COd1BN71rEAyvSM4OIow
+ sil qma E	outlook.live.com
+ sil qma J	projudi.tjpr.jus.br
+ sil qma W	web.whatsapp.com
+ sil exe 'qma H ' + prefs.get('browser.startup.homepage')
+
+ ".scheduled
+
+  if (prefs.get('bw.ts').substring(6,8)==01 &&
+  \   prefs.get('bw.updates.marks.month')<1)
+  \  || prefs.get('bw.updates.marks.applied')!='yes'
+
+  se! bw.updates.marks.month+=1
+  se! bw.updates.marks.applied='yes'
+
+  sil bmark -T src -k r -t 'src: ddg, region' ddg.gg/?q=r:%s
+  sil bmark -T src -k u -t 'src: ddg, site' ddg.gg/?q=site:%s
+  sil bmark -T src -k p -t 'arq: gcache' ddg.gg/?q=!cache%20%s
+  sil bmark -T src -k q -t 'arq: wayback' ddg.gg/?q=!wayback%20%s
+  sil bmark -T src -k i -t 'img: ddg' ddg.gg/?q=!i%20%s
+  sil bmark -T src -k k -t 'img: tineye' ddg.gg/?q=!tineye%20%s
+  sil bmark -T src -k v -t 'vid: youtube' ddg.gg/?q=!yt%20%s
+  sil bmark -T src -k w -t 'ref: wiki' ddg.gg/?q=!wen%20%s
+
+  elif prefs.get('bw.ts').substring(6,8) != 01
+  se! bw.updates.marks.month&
+  fi
+
+"mappings
+
+ ".leaders
+  map -m n s <l1>
+
+ ".base/main
+
+  map -m base <a-i> <cr>
+  map -m base <a-e> <cr>
+  map -m base <a-p> <esc>
+
+  map -m main <c-v> <pass>
+  map -m main <c-z> <pass>
+  map -m main <a-o> -ex st
+
+  map -m main <a-h> <left>
+  map -m main <a-j> <down>
+  map -m main <a-k> <up>
+  map -m main <a-l> <right>
+
+  map -m main <a-g> <home>
+  map -m main <a-s-g> <end>
+  map -m main <a-s-h> <a-left>
+  map -m main <a-s-j> <a-down>
+  map -m main <a-s-k> <a-up>
+  map -m main <a-s-l> <a-right>
+
+ ".command
+
+  map -m v,text-edit <a-t> <esc>
+  map -m v <a-h> -ex norm! h
+  map -m v <a-j> -ex norm! j
+  map -m v <a-k> -ex norm! k
+  map -m v <a-l> -ex norm! l
+
+ ".normal
+
+  "main
+  mapn ç :
+  mapn C <esc><esc><esc>i<esc><esc><esc>i<esc>i
+  mapn i <c-v>
+  mapn I <c-z>
+
+  mapn -a Q -j commands.execute('reg '+(arg=='Q'?'':arg))
+
+  "tabs
+  mapn x :t! 
+  mapn X y:t! <c-t>p<c-[>
+  mapn U -j undoCloseWindow()
+  mapn eu :u 
+  mapn eb :ls 
+  mapn eg -ex ec document.title
+  mapn eh :hs 
+  mapn eH :hs! 
+  mapn ej -ex ju
+  mapn ey -ex y buffer.doc.location.host;
+
+  mapn gr -ex reloada
+  mapn gR -ex reloada!
+  mapn gt :tab 
+  mapn gx :bg tab 
+  mapn gw :wind 
+  mapn gm :em 
+  mapn gM -ex mes
+
+  mapn cd :bd! 
+  mapn cD :bd 
+  mapn ch -ex exe ':hs ' + buffer.doc.location.host
+  mapn cH -ex exe ':hs! ' + buffer.doc.location.host
+  mapn cg -j CommandExMode().open('hs ' + buffer.doc.location.host + '/')
+  mapn cG -j CommandExMode().open('hs! ' + buffer.doc.location.host + '/')
+  mapn ci -j CommandExMode().open('xo site:' + buffer.doc.location + ' ')
+  mapn cI -j CommandExMode().open('xt site:' + buffer.doc.location + ' ')
+  mapn gci -j CommandExMode().open('xx site:' + buffer.doc.location + ' ')
+  mapn cj <c-i>
+  mapn ck <c-o>
+  mapn cJ ]d
+  mapn cK [d
+  mapn ct -ex <count>tabdu
+  mapn cx -ex <count>tabdu!
+  mapn cu -j CommandExMode().open('xo s site:' + buffer.doc.location.host + ' ')
+  mapn cU -j CommandExMode().open('xt s site:' + buffer.doc.location.host + ' ')
+  mapn gcu -j CommandExMode().open('xx s site:' + buffer.doc.location.host + ' ')
+  mapn cw -ex tabde
+  mapn cW :taba 
+  map -b -m n -a cm -j
+  \ (/[$l]/i.test(arg))?commands.execute('tabm '+tabs.allTabs.length):commands.execute('tabm '+count)
+
+  mapn c, <c-p>
+  mapn cl <c-n>
+  mapn cc <c-^>
+  mapn g, g0
+  mapn gl g$
+
+  "marks
+ mapn v :bmark 
+ mapn V A
+ mapn ev :bmarks 
+ mapn eV :bmarks! 
+ mapn em :marks 
+ mapn eM :qmarks 
+
+  "nav
+ mapn S <c-p>
+ mapn ss <c-n>
+ mapn a <c-^>
+ mapn -c cs -ex tabm +<count>
+ mapn -c cS -ex tabm -<count>
+
+ mapn j <c-d>
+ mapn k <c-u>
+
+ mapn <a-h> h
+ mapn <a-l> l
+ mapn <a-j> j
+ mapn <a-k> k
+
+ mapn J L
+ mapn K H
+ mapn gJ -ex fo!
+ mapn gK -ex ba!
+
+ mapn A ;F
+
+  "ex/set
+ map -b -m n <l1>j -j
+ \ commands.execute('se! javascript.enabled!');
+ \ commands.execute('se! javascript.enabled?');
+" map -b -m n <l1>j -j
+" \ commands.execute('se! javascript.enabled!');
+" \ commands.execute('reload');
+" \ setTimeout(() => commands.execute('se! javascript.enabled!'),3000);
+" \ commands.execute('se! javascript.enabled?');
+ mapn <l1>m -ex se! media.autoplay.enabled!
+ mapn <l1>n -ex noh | norm! ilh<esc>
+ mapn <l1>o -ex se online
+
+  "styles
+ mapn <l1>u se um!
+ mapn <l1>i -ex styt -n img.hide
+ mapn <l1>I -ex styt -n img.remove
+
+  "other
+ map -b -m n -a <l1>a -j
+ \ if      (arg=='n') { v='0123456789' }
+ \ else if (arg=='a') { v='acdefijklmnopqrswxz' }
+ \ else if (arg=='A') { v='abcdefghijklmnopqrstuvwxyz' }
+ \ else if (arg=='e') { v='asdfgqwertzxcvb' }
+ \ else if (arg=='d') { v='uiopjklçnm' }
+ \ else if (arg=='h') { v='asdfghjklç' }
+ \ commands.execute('se hk='+v);
+
+  mapn <l1>k <pass><c-a-r>
+
+ "other
+ map -m input <a-w> <c-t>
+
+ map -b -m output-multiline h 18h
+ map -b -m output-multiline j 18j
+ map -b -m output-multiline k 18k
+ map -b -m output-multiline l 18l
+ map -b -m output-multiline c -ex normal! i
+
+"abbrevs
+
+  ca b.g bruno.gasparin@msn.com
+  ia b.g bruno.gasparin@msn.com
+
+"styles
+
+  sty -n img.hide   http*,about:* img  {visibility: hidden !important;}
+  sty -n img.remove http*,about:* img  {display: none !important;}
+  styd!
+
+  sty -n view-source view-source:* span {white-space: pre-wrap; word-wrap: break-word;}
+
+".addons
+
+  if prefs.get('bw.updates.final.once') < 1
+  se! bw.updates.final.once+=1
+
+  "Adblock Latitude
+  exta https://addons.palemoon.org/?component=download&id=adblocklatitude@addons.palemoon.org&version=5.0.1&hash=a07b935e80046a46f7762121b844fcb8b08d68c3db13e3957c5430e322328357
+
+  "Moz Archiver
+  exta https://addons.palemoon.org/?component=download&id=mozarchiver@lootyhoof-pm&version=1.0.2&hash=8981f685c184b97a91e4f9ea92b7ed8e8041fd493fc729ce4c5235e9d1ef5c6b
+
+  "Reader View
+  exta https://addons.palemoon.org/?component=download&id={1111dd1e-dd02-4c30-956f-f23c44dfea8e}&version=2.1.0&hash=0a8acb88d4bf4bbb3854688ef1d60b2d2102dff805132d655563cc2aac419590
+
+" very clumsy
+  js setTimeout(() => commands.execute('Restart'),30000);
+  fi
+

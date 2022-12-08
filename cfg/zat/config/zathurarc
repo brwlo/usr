@@ -1,0 +1,12 @@
+"bw: zathurarc01 (20171101_115318)
+
+  map ç		focus_inputbar :
+  map ;		focus_inputbar :
+  map \\n	feedkeys :nohlsearch<Return>
+  map <A-j>	feedkeys <C-d>
+  map <A-k>	feedkeys <C-u>
+  map ev	focus_inputbar :bmark
+  map eV	focus_inputbar :blist
+
+  set statusbar-bg "#FF0000"
+  set statusbar-fg "#FFF000"

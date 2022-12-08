@@ -1,0 +1,5 @@
+#!/bin/bash
+x `(tce-load -i pinentry-curses.tcz; tce-load -i pass.tcz)`
+export PASSWORD_STORE_DIR=$dat/pass/pwds
+cd $PASSWORD_STORE_DIR
+prefix pass $@

@@ -1,0 +1,8 @@
+#!/bin/bash
+OPENER=opener
+
+data=$var/lf; mkdir -p $data;
+[ -e $var/lf/marks ] || cp $dat/lf/marks $data
+
+[ -e "$XDG_DATA_HOME/lf" ] || ln -sf $data "$XDG_DATA_HOME"
+exec $paf/bin/lf -command "source $cfg/lf/lfrc" $@

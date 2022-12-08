@@ -1,0 +1,5 @@
+#!/bin/bash
+cd /sys/class/power_supply/BAT1
+[ $1 ] && symbols='s/Charging/↑/;s/Discharging/↓/;s/Full/=/;s/Unknown/?/'
+[ $1 ] && status=`cat status|sed -e $symbols`
+[ $1 ] && echo $status || cat capacity

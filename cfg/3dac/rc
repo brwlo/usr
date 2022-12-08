@@ -1,0 +1,26 @@
+unbind x
+
+bind ç  fillcmdline_notrail
+bind ,  tabprev
+bind l  tabnext
+bind a  tab #
+bind j  scrollline 18
+bind k  scrollline -18
+bind X  stop
+bind x  fillcmdline tabqueue
+bind I  mode ignore
+bind h  composite js document.location.href|fillcmdline_tmp 2000
+bind ZC composite clean | qall
+
+bind --mode=ignore <esc> mode normal
+
+command clean sanitise cache indexedDB localStorage pluginData serviceWorkers commandline tridactylsync
+command wazap autocmd DocLoad https:\/\/api.whatsapp.com\/send\?phone\= js let f=()=>document.querySelector("[href*=phone]").click();setTimeout(f(),1000);setTimeout(f(),2000);
+command nozap autocmddelete DocLoad https:\/\/api.whatsapp.com\/send\?phone\=
+
+set searchengine duckduckgo
+
+autocmd DocStart .* zoom 75
+
+source --url localhost:8080/dat/3dac/qmks
+#source /home/tc/usr/cfg/3dac/rc

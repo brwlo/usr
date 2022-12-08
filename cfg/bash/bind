@@ -1,0 +1,16 @@
+# bash/bind
+# ~ why does "jobs|cat" work, but not "jobs" or "echo $(jobs)"?
+
+for i in vi{,"-insert"}; do
+  bind -m $i -x '"\C-L"':"reset"
+  bind -m $i -x '"\C-l"':"setxkbmap-;clear"
+  bind -m $i -x '"\ej"':"jobs -l"
+  bind -m $i -x '"\el"':"%"
+  bind -m $i -x '"\ew"':"session-info"
+  bind -m $i -x '"\es"':"ts"
+  bind -m $i -x '"\eS"':"ts -c"
+  bind -m $i -x '"\et"':"tasks"
+  bind -m $i -x '"\eT"':"tasks e"
+  bind -m $i -x '"\en"':"e $wrk/`d`.note"
+  bind -m $i -x '"\C-x"':"setxkbmap-;clear"
+done; unset i

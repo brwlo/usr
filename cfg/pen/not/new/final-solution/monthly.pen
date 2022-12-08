@@ -1,0 +1,6 @@
+" monthly
+
+  gr! monthly | gr monthly
+
+  tabopen palemoon.org/releasenotes.shtml
+  version

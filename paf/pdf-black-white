@@ -1,0 +1,11 @@
+#!/bin/bash
+# pdf-black-white <file> [:[i|t]] (i: imagemagick; t: tesseract)
+
+gs -o ${1%.*}.bw.pdf                      \
+	-sDEVICE=pdfwrite                       \
+	-dPDFSETTINGS=/prepress                 \
+	-sColorConversionStrategy=Gray          \
+	-sColorConversionStrategyForImages=Gray \
+	-sProcessColorModel=DeviceGray          \
+	-dCompatibilityLevel=1.4                \
+	$1

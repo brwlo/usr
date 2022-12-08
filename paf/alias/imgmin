@@ -1,0 +1,5 @@
+#!/bin/bash
+# https://github.com/thetinygoat/imgmin
+# not: https://github.com/rflynn/imgmin
+HOME=$var/imgmin; mkdir -p $HOME/.config/imgmin
+$paf/bin/imgmin $@

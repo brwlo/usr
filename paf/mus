@@ -1,0 +1,9 @@
+#!/bin/bash
+shopt -s lastpipe
+case $1 in # '':lst n:net u:url ?:bmk
+'') bmk mus|IFS=$'\t' read num adr nam
+    watchvid $num $adr "$nam"         ;;
+:n) shift; yt $@                      ;;
+:u) shift; yt -L $@                   ;;
+ *) bmk mus $@                        ;;
+esac

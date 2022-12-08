@@ -1,0 +1,7 @@
+" macros.pen
+
+  gr! macros | gr macros
+
+  "up, down
+  js editor.setRegister('u','gg1000<A-m>s')
+  js editor.setRegister('v','G1000<A-m>s')

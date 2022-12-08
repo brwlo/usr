@@ -1,0 +1,19 @@
+#!/bin/bash
+
+( x poppler07-bin; x imagemagick )
+
+convert $1 -extent x4960 -crop x2@ +repage MC.png
+for i in MC-*.png; do convert $i $i.pdf; done
+pdfunite MC*pdf MC-tmp.pdf
+mupdf MC-tmp.pdf
+read -p rotate\ 90deg?-y\|n ask
+[ "$ask" = y ] && pdftk MC-tmp.pdf cat 1-endwest output p3.pdf
+rm MC*
+
+# scale img to a3
+# increase contrast to max
+# color to alpha
+# export as png
+# convert (the cmd above - still not understood)
+# convert resulting crops to pdf
+# pdfunite

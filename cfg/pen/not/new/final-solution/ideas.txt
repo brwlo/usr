@@ -1,0 +1,37 @@
+" experiments.pen
+
+"= inspect all elements in screen
+"  how to use ;? with all tags and then reset 'eht[?]'?
+
+"= a possible way to reproduce the function of the "." key
+"  create a register for the last 5 or 10 actions in normal mode
+"  example: reg £: (d)(cs)(gu)(<c-p>)
+"  provide a count and repeat one of the last actions
+
+"= other alternative hints modes
+"  for sites that have many too many useless clickable elements
+" com! AltF -j
+" \ commands.execute('se hintkeys=abcdefghijklmnopqrstuvwxyz');
+" \ commands.execute('norm! f');
+" \ commands.execute('se hintkeys&')
+
+"= a command to yank part of a url or the title
+"  ey; cy; gy: yank topmost domain; y ...
+
+"= a command to edit in vim all input fields at once
+"  displaying '^<fieldName>:\t[<default input>]'
+
+"= diferent keys for hints
+  map -b -m n -a -g maps <l1>a -j
+  \ if      (arg=='n') { v='0123456789' }
+  \ else if (arg=='a') { v='acdefijklmnopqrswxz' }
+  \ else if (arg=='A') { v='abcdefghijklmnopqrstuvwxyz' }
+  \ else if (arg=='e') { v='asdfgqwertzxcvb' }
+  \ else if (arg=='d') { v='uiopjklçnm' }
+  \ else if (arg=='h') { v='asdfghjklç' }
+  \ commands.execute('se hk='+v);
+
+"= different modes for tabs, nav, history...
+"  ie, keys as j,k could mean different things at times
+"  h, vg, could switch the value of ,/l from <c-n/p> to H/L
+"  (and leave it at that - no need to press h,/hl every time)

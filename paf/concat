@@ -1,0 +1,5 @@
+#!/bin/bash
+ts=`date +%Y%m%d%H%M%S`
+printf "file %s\n" *ogg >tmp.$ts
+ffmpeg -f concat -i tmp.$ts concat.mp3
+#rm tmp.$ts

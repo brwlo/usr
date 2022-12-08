@@ -1,0 +1,39 @@
+#!/bin/bash
+
+[ "$TCE" ] && { x php-7.4-cli; x ffmpeg4-dev; }
+
+
+home=$HOME HOME=$var/ffox
+bkp="$dat/mid/ffox/profiles"
+moz=$HOME/.mozilla/firefox
+oth=$dat/ffox/other/
+tri="source --url localhost:8080/cfg/3dac/rc"
+
+mkdir -p $moz $bkp $oth
+[ -e $HOME/Downloads ]||ln -s $ram $HOME/Downloads
+[ -e $HOME/Desktop   ]||ln -s $ram $HOME/Desktop
+
+case $1 in
+
+:b) cd $moz; zip -r0 $2.zip $2
+    mv $moz/$2.zip $bkp ;;
+
+:B) fd -d1 '^[a-z]{2,3}$' $moz -x \
+    basename {}|xargs -n1 ff :b ;;
+
+:r) unzip -d $moz/ $bkp/$2.zip;;
+
+:R) shift; for i; do ff :r $i; done ;;
+
+:d) mv -t $crp $moz/$2 && exit ;;
+
+ :) shopt -s lastpipe
+    fd -d1 '^[a-z]{2,3}$' $moz -x bn {}|
+    dmenu|read pick && ff $pick ;;
+
+ *) pro=$moz/${1:-bw} srv=y
+    mkdir -p $pro; cp -r $oth/* $pro
+    firefox --profile $pro "$2"
+    x servusr; echo $tri|xi ;;
+
+esac & { [ "$srv" ] && sleep 30 && pkill php; }

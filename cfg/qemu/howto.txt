@@ -1,0 +1,33 @@
+qemu
+
+= enable kvm
+. modprobe kvm
+. modprobe kvm_intel
+. modprobe mdem
+. modprobe vfio
+. modprobe irqbypass
+. modprobe kvmgt
+. modprobe virtio
+. reboot
+
+= enable hugepages
+. /etc/fstab:
+.	hugetlbfs /dev/hugepages hugetlbfs mode=01770,gid=78 0 0
+. echo <1024MB/(2MB=hugepagesize)> > /etc/sys/vm/nr_hugepages
+. echo vm.nr_hugepages = 550 >> /etc/sysctl.d/40-hugepage.conf
+
+= command
+. mount ??
+. qemu \
+. -m 1024
+. -cdrom windows.iso
+. -boot order=d
+.? -monitor stdio
+. -no-acpi
+. virtual.win.cow
+
+= starting
+emulate i <iso>    => loads $emulations/img/*
+- there's only supposed to be one iso there at a time.
+- a dsk.cow is still needed - the default is $emulations/empty/dsk.cow
+emulate i tinycore => loads $emulations/tinycore/dsk.cow

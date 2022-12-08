@@ -1,0 +1,10 @@
+#!/bin/bash
+shopt -s lastpipe
+case $1 in
+  g) user=$mkt/cli/\@geo ;;
+  m) user=$mkt/cli/\@mar ;;
+  s) user=$mkt/cli/\@sag ;;
+  *) user=$mkt/cli/\@sag ;;
+esac
+fd acessos $user -x cat {}|fzf|read a eml pwd c
+echo $eml|xi && read pwds && echo $pwd|xi

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+shopt -s lastpipe
+dir=$mid/lst
+arg=${1:-`xo`}
+
+[ -e "`realpath $1 2>/dev/null`"  ] &&
+{ [[ $1 == ^[0-9]{16}$ ]] &&
+     type=stamp || type=file;
+} || type=url
+
+case $type in
+stamp) opener $dir/$1* ;;
+ file) opener $1 ;;
+  url) bmk all :A `xo`
+       [ $2 = :n ] || yt-dlp $arg -o $dir/`t` & mpv $arg
+       echo -e "`t`\t`xo`\t`gettitle`\t" ;;
+esac

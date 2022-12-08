@@ -1,0 +1,6 @@
+#!/bin/bash
+# recurses (because imgmin only does top dir)
+
+fd -tf 'png|jpg'"${1#/|}" -x sh -c \
+  "convert {} {/.}.jpg; mv -t $crp {}"
+imgmin && mv dist/* . && rm -rf dist

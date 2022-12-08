@@ -1,0 +1,22 @@
+" commands.pen
+
+gr! commands | gr commands
+js var bw = plugins.newFunctions;
+
+com! bwbase -bang -nargs * -d 'convert to base < 63' -j
+\ let out = !bang ? bw.base(62,bw.time()) : bw.base(args[0],args.slice(1));
+\ commands.execute('echom "' + out + '"');
+
+com! bwtime -bang -nargs * -d 'show the time' -j
+\ let out = !bang ? bw.time(' ') :  bw.time('');
+\ commands.execute('echom "' + out + '"');
+
+com! bwR -nargs * !R -q -e "<args>"
+
+com! ibwsavemid -bang -nargs * -j let x=''; if (bang) x='-x'; commands.execute(
+\ `!youtube-dl ${x} -o "${prefs.get("bw.downloads")}/${args}.%(ext)s" ${buffer.URL}`)
+
+com! Restart -nargs 0 exe
+\ "restart ++cmd 'se rtp=" + prefs.get('bw.pen.config') + " | lpl (js|pen)$'"
+com! Rehash -nargs 0 exe
+\ "rehash ++cmd 'se rtp=" + prefs.get('bw.pen.config') + " | lpl (js|pen)$'"

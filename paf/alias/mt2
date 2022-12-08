@@ -1,0 +1,12 @@
+#!/bin/bash
+# mt2 labl => /mnt/drv/labl
+[ "$TCE" ] && { x ntfs-3g && x ntfsprogs && sleep 1; }
+vol=$dat/dir/vol.tsv
+case $1 in
+`fro 2 $vol|cut -f1|grep $1`)
+  grep $1 $vol|while read labl bool uuid opts; do
+    dir=$mnt/$1; mkdir -p $dir
+    sudo mount $opts UUID=$uuid $dir
+  done ;;
+*) sudo mount $@ ;;
+esac

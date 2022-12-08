@@ -1,0 +1,10 @@
+#!/bin/bash
+[ "$TCE" ] && [ ! -f "`prefix : R`" ] && $TCE/ondemand/ffmpeg4-dev
+
+for i in $dat/ffmpeg/*/*.tcz; do
+  bnm=`basename $i` dir=$var/ffmpeg/`updir $i`/${bnm%.*}
+  mkdir -p $dir &&
+  sudo mount -o loop -t squashfs "$i" "$dir" 2>/dev/null 
+done
+
+exec prefix ffmpeg $@

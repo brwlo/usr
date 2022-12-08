@@ -1,0 +1,26 @@
+super + e
+  $cfg/sxhkd/endmode
+
+Escape
+  $cfg/sxhkd/endmode
+
+v
+  vol d
+
+shift + v
+  vol u
+
+ctrl + v
+  vol
+
+super + v
+  bright d
+
+super + shift + v
+  bright u
+
+shift + f
+  ff :
+
+w
+  Y & $cfg/sxhkd/endmode

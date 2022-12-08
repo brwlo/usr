@@ -1,0 +1,80 @@
+" mappings.pen
+
+  gr! maps | gr maps
+
+ "leaders
+
+  map -m n s <lead1>
+  map -m n o <tabs>
+
+ "cleaning
+  map -m main <c-v>  <pass>
+  map -m main <c-z>  <pass>
+  map -m base <f3>   <nop>
+  map -m base <s-f3> <nop>
+  map -m base <c-w>  <nop>
+
+ "base/main
+  map -m base l  <cr>
+  map -m main cc -ex st
+
+  map -m main <a-,>   <left>
+  map -m main <a-j>   <down>
+  map -m main <a-k>   <up>
+  map -m main <a-l>   <right>
+  map -m main <a-g>   <home>
+  map -m main <a-s-g> <end>
+  map -m main <a-s-,> <a-left>
+  map -m main <a-s-j> <a-down>
+  map -m main <a-s-k> <a-up>
+  map -m main <a-s-l> <a-right>
+
+ "command etc.
+  map -m v,text-edit <a-t> <esc>
+  map -m v <a-,> -ex norm! h
+  map -m v <a-j> -ex norm! j
+  map -m v <a-k> -ex norm! k
+  map -m v <a-l> -ex norm! l
+
+ "normal
+  map -b -m n ç :
+  map -b -m n i <c-v>
+  map -b -m n I <c-z>
+  map -b -m n C <esc><esc><esc>i<esc><esc><esc>i<esc>i
+  map -b -m n <a-.> @@
+  map -b -m n -a Q -j commands.execute(`reg ${arg=='Q'?'':arg}`)
+  map -b -m n <lead1>m :em 
+  map -b -m n <lead1>M -ex mes
+
+  "tabs/windows
+  map -b -m n eu :u
+
+  map -b -m n wo w
+  map -b -m n wO W
+  map -b -m n wu -j undoCloseWindow()
+
+  map -b -m n <tabs>o o
+  map -b -m n <tabs>l t
+  map -b -m n <tabs>, t!
+  map -b -m n <tabs>O O
+  map -b -m n <tabs>L t
+  map -b -m n <tabs><s-,> -j CommandExMode().open('t!'+buffer.URL)
+
+  map -b -m n <tabs>d :bd! 
+  map -b -m n <tabs>D :bd 
+
+  map -b -m n tl :tab 
+  map -b -m n t, :bg tab 
+
+  map -b -m n eg -ex ec document.title
+  map -b -m n ey -ex y buffer.doc.location.host
+
+  "history
+  map -b -m n eh :hs
+  map -b -m n eH :hs!
+  map -b -m n ej -ex ju
+
+  map -b -m n <tabs>h -ex exe ':hs ' +buffer.doc.location.host
+  map -b -m n <tabs>H -ex exe ':hs! '+buffer.doc.location.host
+  map -b -m n <tabs>g -j CommandExMode().open('hs '+)
+  map -b -m n <tabs>G -j CommandExMode().open('hs '+)

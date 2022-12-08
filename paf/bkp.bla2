@@ -1,0 +1,10 @@
+#!/bin/bash
+x tce-load -i rsync
+mt2 bla2 2>/dev/null
+
+[ "$1" = : ] || n=n
+
+excl='boo|mnt|out|crp|ram|var|mid'
+for i in `ls $usr|grep -vE "$excl"`; do
+  sudo rsync -av$n --delete $usr/$i/ $mnt/bla2/usr/$i
+done

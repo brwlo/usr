@@ -1,0 +1,7 @@
+#!/bin/bash
+adr=`xo`
+case $adr in
+*youtube.com/watch*) yt-dlp -e "`xo`" ;;
+*) wget -q -O - "$adr"| sed -n -E \
+   's/^.*<title.*>(.*)<\/title>.*$/\1/p'    ;;
+esac|tr -d '\200-\377'

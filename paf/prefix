@@ -1,0 +1,5 @@
+#!/bin/bash
+def=/usr/bin spe=/usr/local/bin
+[ $1 = : ] && { cmd=echo || cmd=eval; } && shift
+[ -f "$spe/$1" ] && str="$spe/$1"||str="$def/$1"
+shift; exec $cmd $str $@

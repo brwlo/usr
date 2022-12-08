@@ -1,0 +1,17 @@
+" rc.pen
+
+  delgr plugin-rc
+  gr! rc | gr rc
+
+  so javascript.js
+  so commands.pen
+  so configs.pen
+  so preferences.pen
+  so autocommands.pen
+  so marks.pen
+  so mappings.pen
+  so macros.pen
+  so abbreviations.pen
+  so styles.pen
+  so fixes.pen
+  so profiles.pen

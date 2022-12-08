@@ -1,0 +1,7 @@
+" fixes.pen
+
+  gr fixes | gr! fixes
+
+" Why do I need this?
+  map -m ex <a-p> <esc>
+  map -m prompt <a-p> <esc>

@@ -1,0 +1,6 @@
+#!/bin/bash
+[ -e `prefix : bc` ] || x tce-load -i bc
+case $1 in
+  :) shift; prefix bc ;;
+  *) prefix bc -l     ;;
+esac

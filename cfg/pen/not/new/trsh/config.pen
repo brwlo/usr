@@ -1,0 +1,36 @@
+" config.pen
+
+gr! config | gr config
+
+
+if /win/i.test(window.navigator.platform)
+se! bw.d.root='i:\\ib\\'
+el
+se! bw.d.root='/home/bw/u/'
+fi
+
+exe 'se! bw.d.dwn='     + prefs.get('bw.d.root') + 'v/downloads/'
+exe 'se! bw.d.pen.rtp=' + prefs.get('bw.d.root') + 'c/pen/'
+exe 'se! bw.d.pen.reg=' + prefs.get('bw.d.root') + 'sys/pen/reg/'
+exe 'se! bw.d.pen.var=' + prefs.get('bw.d.root') + 'v/palemoon/pentadactyl/'
+
+if /^...-/i.test(prefs.get('bw.profile'))
+exe 'se! bw.profile.type=' + /^.../.exec(prefs.get('bw.profile'))
+el
+se! bw.profile.type='gen'
+fi
+
+if /win/i.test(window.navigator.platform)
+exe 'se! bw.pen.cache=' + prefs.get('bw.d.root') + 'v\palemoon\profiles' + prefs.get('bw.profile') + 'dactyl\cache.zip'
+Is this necessary anymore?
+el
+js storage.infoPath._path=prefs.get('bw.d.pen.var')+'info/'+prefs.get('bw.profile')
+fi
+
+js editor.defaultRegister='*+'
+
+colo colors1
+hi MOW -a margin-bottom: 1em;
+sty -n chrome chrome* [id*=status4evar] {display: none !important;}
+
+exe 'sil cd ' + prefs.get('bw.d.root')

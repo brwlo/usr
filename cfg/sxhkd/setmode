@@ -1,0 +1,4 @@
+#!/bin/bash
+pkill sxhkd && mkdir -p $var/sxhkd
+>$var/sxhkd/mode$@ &&
+prefix sxhkd -c $cfg/sxhkd/mode$@

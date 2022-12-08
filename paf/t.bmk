@@ -1,0 +1,33 @@
+#!/bin/bash
+
+shopt -s lastpipe
+cd $dat/bmk
+bn=$1; shift
+db=$dat/bmk/$bn;
+touch $db
+
+op=$1; shift
+tr="tr -d '\200-\377'"
+menu="dmenu -i -p $bn -l 10"
+pad3=`awk -F'\t' '{print $3}' $db|wc -L`
+pad4=`awk -F'\t' '{print $4}' $db|wc -L`
+[ "$pad3" -gt 70 ] && pad3=70
+[ "$pad4" -gt 40 ] && pad4=40
+prnt="printf \"%-${pad3}s\t%-${pad4}s\t%s\n\",\$3,\$4,\$1"
+prnt="{\$3=substr(\$3,1,70); \$4=substr(\$4,1,40); $prnt}"
+
+case $op in
+:p) <$db $tr|awk -F'\t' "$prnt"|sed 's/\t/│/g'|$menu         ;;
+:l) bmk $bn :p|cut -d"│" -f3                                 ;;
+:g) ln=`bmk $bn :l`;[ "$ln" ] && grep "^$ln" $db|cut -f$1    ;;
+:a) tit=`gettitle`; printf "%s\t%s\t%s\t%s\n" `t` `xo` \
+    "`echo "$tit|"|dmenu -p $bn`"|read tmp; echo "$tmp" |
+    grep -qE ".+\t.+\t.+" && echo "$tmp"|tr '|' '\t'>>$db    ;;
+:r) sed -i "/${1:-`bmk $bn :g 1`}/d" $db                     ;;
+:c) ln=`bmk $bn :l`;
+    ch="`grep "^$ln" $db|$menu|tr '|' '\t'`"
+    [ "$ln " ] && [ "$ch" ] && sed -i "/$ln/c$ch" $db        ;;
+:C) awk "{print \$$1}" $db                                   ;;
+ *) ln=`bmk $bn :l`; [ "$ln" ] &&
+    awk -F'\t' /$ln/'{printf "%s\t%s\t\"%s\"",$1,$2,$3}' $db ;;
+esac

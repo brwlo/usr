@@ -1,0 +1,4 @@
+#!/bin/bash
+dir=$var/xclip; mkdir -p $dir; cd $dir
+[ "`xclip -o -sel c`" = "`ls -Art|tail -n1|xx cat`" ]||
+  (xclip -o -sel c; echo) >$dir/`Tr`; xclip -o -sel c

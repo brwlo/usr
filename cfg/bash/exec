@@ -1,0 +1,22 @@
+# bash/exec
+
+stty -ixon
+
+# once
+[ $SHLVL -eq 1 ] && {
+  x chmod u+s `which slock`
+  x net -a && timefix;
+  for i in $dat/cfg/*; do $i; done; }
+
+# gui
+[ $SHLVL -ne 1 ] && setxkbmap-
+
+# lf
+[ "$LF_LEVEL" ] && {
+  [ "$LF_LEVEL" -gt 1 ] && lev=$LF_LEVEL
+  export PS1="${ps1:-$ylw}${lev}${chr1} ${txt}"
+  export PS2="${ps1:-$ylw}${lev}${chr2} ${txt}"; }
+
+# vnc
+#[ $SHLVL -eq 1 ] &&
+#  { ls /mnt/test || x11vnc -display $DISPLAY & }

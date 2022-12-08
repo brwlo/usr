@@ -1,0 +1,42 @@
+#!/bin/bash
+# pm (1, wA3l1GF6)
+
+# TODO
+# /dev/shm. see:
+# - https://wiki.archlinux.org/index.php/Firefox/Profile_on_RAM
+# - https://wiki.archlinux.org/index.php/Profile-sync-daemon
+# - where is cache stored for palemoon?
+
+profiles=($vm/palemoon/profiles)
+penxpi=$vm/palemoon/pentadactyl/xpi/fix/pentadactyl
+proxy='pentadactyl@addons.palemoon.org'
+pt1='user_pref("extensions.bootstrappedAddons", '
+pt2='"{\"pentadactyl@addons.palemoon.org\":'
+pt3='{\"version\":\"1.3.1\",\"type\":\"extension\",\"descriptor\":\"'
+pt5='\",\"multiprocessCompatible\":false,\"active\":true,'
+pt6='\"userDisabled\":false,\"appDisabled\":false}}");'
+mkarr () {
+	declare -Ag paths; declare -Ag names; declare -a  args=("$@")
+	for i in $(find "${args[@]}" -mindepth 1 -maxdepth 1 -type d); do
+		paths[${i##*/}]=$i; names[${i%%*/}]="${i##*/}"
+done; }
+
+mkarr ${profiles[@]}; choice=(${names[@]})
+chosen=$(printf '%s\n' ${choice[@]}|dmenu)
+if		[ ! $chosen ]; then exit #quit
+elif	[ ${paths[$chosen]} ]; then #open
+	palemoon -profile ${paths[$chosen]} --no-remote --pentadactyl \
+	"+purgecaches ++cmd 'se rtp=$cm/pen | lpl (js|pen)$'"
+else #make
+	profile=${profiles[0]}/$chosen; mkdir -p $profile/extensions
+	pt4=$profile/extensions/$proxy; echo $penxpi>$pt4
+	palemoon -profile $profile --no-remote -headless &
+	pid="$!"; sleep 8; kill "$pid"
+	echo -e $pt1$pt2$pt3$pt4$pt5$pt6 >> "$profile/user.js"
+	extjson=$profile/extensions.json
+	printf '%s' $(sed -E \
+		's/userDisabled":true/userDisabled":false/;s/active":false/active":true/'\
+		$extjson) > $extjson
+	palemoon -profile $profile --no-remote --pentadactyl \
+	"+purgecaches ++cmd 'se rtp=$cm/pen | se! bw.profile=$chosen | lpl (js|pen)$'"
+fi

@@ -1,0 +1,3 @@
+#!/bin/bash
+x tce-load -i yt-{dlp,fzf} >/dev/null
+YTFZF_CONFIG_DIR=$cfg/ytfzf ytfzf -D $@

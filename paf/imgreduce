@@ -1,0 +1,15 @@
+#!/bin/bash
+# recurses (because imgmin only does top dir)
+
+tmp=$crp/`t`.imgreduce; mkdir -p $tmp
+src='png|jpg'"${1#/|}"
+cnv="convert {} {/.}.jpg; mv -t $tmp {}"
+cmd="imgmin && mv dist/* . && rm -rf dist"
+
+
+fd -d1 "$src" -x sh -c "$cnv"; $cmd
+pwd
+[ `fd -d1 -td|wc -l` -gt 0 ] || exit
+for i in *; do [ -d "$i" ] &&
+  cd $i; imgreduce; exit
+done

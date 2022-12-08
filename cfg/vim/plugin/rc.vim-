@@ -1,0 +1,174 @@
+"  " rc.vim (wzaahqD,bw)
+"  
+"  "first
+"    scripte utf-8
+"    let ARQ='/home/bw/i/ib/arq/' | let CNF=$cm.'/vim' | let VAR=$vm.'/vim'
+"  
+"  "opts
+"    se acd bri hid noet nu rnu wrap
+"    se enc=utf-8 isk-=# ls=2 scbk=-1 siso=1000 stal=0 swb=useopen ts=2 sts=2 sw=2
+"    se path+=$am/**/*{n,note} path+=$cm/**/*
+"    se ssop="buffers,folds,globals,help,localoptions,resize,tabpages"
+"    se bk wb udf
+"  	let &dir=VAR.'/swp//'|let &bdir=VAR.'/bkp/'|let &udir=VAR.'/undo/'
+"    if has('nvim')|let &shada='s10,<0,!,''100,h,n'.VAR.'/shada'
+"    el            |let &viminfo='''100,h,%,n'.VAR.'/viminfo'|en
+"    let &fillchars='fold: ' | let mapleader=' '
+"    if has('statusline')
+"     let &stl ='%<%f'
+"     let &stl.=' [%{(&fenc==""?&enc:&fenc).((exists("+bomb") && &bomb)?",B":"")}]'
+"     let &stl.='%m%r%h%='
+"     let &stl.='%14.((%l/%L,%c%V)%) %p%% :: %P'|en
+"    syntax on | filetype plugin indent on
+"  
+"  "func/com
+"  	fu! RegDel()
+"  	let Regs=split('abcdefghijklmnopqrstuvwxyz0123456789"-/+*','\zs')
+"  	for i in Regs | cal setreg(i,'') | endfo
+"  	endf
+"  
+"  	" ~
+"  	fu! ArgsList()
+"  	"Pretifies the argument list.
+"  	let i=0 | wh i<argc()
+"  	  echo printf('%'.strlen(argc()).'s',i).' '.
+"  	  \expand('#'.bufnr(argv(i)).':p:h:t')
+"  	  let i=i+1
+"  	 endw
+"  	endf
+"  
+"  	fu! Grep(search,dir)
+"  	ccl | let Do=['bufdo','%']|if a:dir!=''
+"  	let Do=['','`find '.a:dir.' -name *nt -o -name *note`']|en
+"  	cal setqflist([],' ',{'title':'Grep: '.string(a:search)})
+"  	exe 'nos noa '.Do[0].' vimgrepa /'.a:search.'/j '.Do[1]
+"  	endf
+"  
+"    fu! LoadNotes(status)
+"  " sil! vim /\v%1l^(PER|PEN|SUS|UNK|CUR)/
+"  	exe 'sil! vim /\v%1l^'.a:status.'/'.
+"  	\' ~/i/ib/arq/**/*note ~/i/ib/arq/**/.*note'
+"  	nos cfdo arga %
+"  	rew | se swf | norm! \<c-[\>
+"  " nos argdo cal AddHeader()
+"  	endf
+"  	com! -nargs=* LoadNotes sil! cal LoadNotes(<q-args>)
+"  
+"  	com! -nargs=* Term		nos te '$bash'
+"  	com! -nargs=* Ranger	nos te '$bash -c r'
+"  
+"  "autoc
+"  	aug rc-au | au!
+"  		au TermOpen term://* setl nonu nornu
+"  		au BufRead,BufNewFile *vim exe 'so '.CNF.'/syntax/vim.vim'
+"  		au BufNewFile *\.hdoc					                        se ft=hdoc
+"  		au BufAdd,BufEnter,BufRead,BufNewFile *\.fs						se ft=fs
+"  		au BufAdd,BufEnter,BufRead,BufNewFile *\.note					se ft=note
+"  		au BufAdd,BufEnter,BufRead,BufNewFile *\.bash/*				se ft=sh
+"  		au BufAdd,BufEnter,BufRead,BufNewFile *\.pen					se ft=pen
+"  		au BufAdd,BufEnter,BufRead,BufNewFile *i3/config			se ft=i3
+"  		au BufAdd,BufEnter,BufRead,BufNewFile *\.tsv					se ft=tsv
+"  		au BufAdd,BufEnter,BufRead,BufNewFile *\.tree					se ft=tree
+"  		au BufAdd,BufEnter,BufRead,BufNewFile *ledger/*txt		se ft=ledger
+"  		" tmp
+"  "		au VimEnter *note exe 'e '.ARQ.'z/eph.n'
+"  "		au VimEnter *note cal Colorme()
+"  "			fu Colorme()
+"  "				sy match file '^>.*$' | hi file ctermfg=green
+"  "				sy match tits '\v^: .+ : ' | hi tits ctermfg=red
+"  "			endf
+"  "	aug end
+"  
+"  "map
+"  	nn <a-.> @:
+"  	nn ç								:
+"  	nn Ç								:Term<cr>
+"  	nn <leader><leader>	:w<cr>
+"  	nn <leader>a				<c-^>
+"  	nn <leader>s				:ls\|tabs<cr>
+"  	nn <leader>w				:pwd<cr>
+"  	nn <a-l>						:n<cr>
+"  	nn <a-,>						:N<cr>
+"  	nn <a-j>						:cn \| sil! norm! zo<cr>
+"  	nn <a-k>						:cp \| sil! norm! zo<cr>
+"  	nn <leader>,				:bp<cr>
+"  	nn <leader>l				:bn<cr>
+"  	nn <leader>L				:se list!<cr>
+"  	nn <leader>W				:se wrap!<cr>
+"  	nn gl								:se cul!<cr>
+"  	nn gL								:se cuc!<cr>
+"  	nn j								gj
+"  	nn k								gk
+"  	nn gj								j
+"  	nn gk								k
+"  	nn Y								y$
+"  	nn <leader>y				"*
+"  	nn <leader>Y				"+
+"  	nn <leader>x				"_
+"  	nn <leader>n				:noh<cr>
+"  	nn <a-r>						:Ranger<cr>
+"  	nn <a-w>						:B<space>
+"  	nn <a-3>						:exe 'ArqGrep '.expand('<cword>'))[0]<cr>
+"  	nn <a-#>						:exe 'BufGrep '.expand('<cword>')
+"  	nn <a-f>						:FZF
+"  "	nn g<a-c>						:echo TimeReveal(expand('<cword>'))[0]<cr>
+"  "  
+"  
+"  	cno <a-e>						<c-\>e
+"  	cno <a-s-e>					<c-\>eexpand('
+"  	cno <a-0>						<c-b>
+"  	cno <a-$>						<c-e>
+"    cno <a-h>						<left>
+"    cno <a-j>						<down>
+"    cno <a-k>						<up>
+"    cno <a-l>						<right>
+"    cno <a-s-h>					<s-left>
+"    cno <a-s-l>					<s-right>
+"  
+"  	ino <a-c>						<c-r>=split(system('b $(d)'),'\n')[0]<cr>
+"  	ino <a-v>						<c-r>=split(system('d -u 1'),'\n')[0]<cr>
+"  
+"  	if has('nvim')
+"  		tno <a-p>					<c-\><c-n>
+"  		tno <a-o>					<esc>
+"  		tno <a-i>					<cr>
+"  		tno <a-a>					<c-\><c-n><c-^>
+"  		tno <a-w>					<c-\><c-n><c-w><c-w>
+"  	en
+"  
+"  "appearance
+"    hi CursorColumn	cterm=bold ctermbg=darkred ctermfg=yellow
+"    hi CursorLine		cterm=bold ctermbg=darkred ctermfg=yellow
+"    hi Folded				ctermfg=yellow ctermbg=darkgrey
+"    hi QuickFixLine	ctermfg=red ctermbg=yellow
+"    hi Search				ctermbg=darkgreen ctermfg=white
+"    hi StatusLine		ctermbg=black ctermfg=green cterm=bold
+"    hi StatusLineNC	ctermbg=black ctermfg=red cterm=bold
+"    hi TermCursor		ctermfg=green guifg=green
+"    hi VertSplit		ctermbg=white ctermfg=black
+"  
+"  "fix
+"  	aug rc-fix | au!
+"  		au VimEnter * if &term!='linux' | se gcr& | en
+"  		au VimLeave * se gcr=a:block-blinkon0
+"  	aug end
+"  
+"  "plugins
+"  	"netrw
+"    let g:netrw_home=VAR.'/vim/netrw'
+"    let g:netrw_sepchr=0x01
+"    let g:netrw_xstrlen=0
+"  
+"  	"ranger
+"  	aug rc_plugins_ranger | au!
+"  		au BufEnter *
+"  		\if (split(expand('%'),' ')[0] =~ '\vterm://.*:r(anger)?$')
+"  		\setl nonu nornu|en
+"  	aug end
+"  	map <leader>rr :RangerEdit<cr>
+"  	map <leader>rv :RangerVSplit<cr>
+"  	map <leader>rs :RangerSplit<cr>
+"  	map <leader>rt :RangerTab<cr>
+"  	map <leader>ri :RangerInsert<cr>
+"  	map <leader>ra :RangerAppend<cr>
+"  	map <leader>rc :set opfunc=RangerChangeOperator<cr>g@

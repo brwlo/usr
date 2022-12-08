@@ -1,0 +1,11 @@
+#!/bin/bash
+
+case $1 in
+:f) <$2 xi ;;
+ *) dir=$var/xclip; mkdir -p $dir; cd $dir
+    xclip -i -sel c
+    xclip -o -sel c|xclip -i -sel p
+    xclip -o -sel c|xclip -i -sel s
+    [ "`ls -Art|tail -n1|xx cat`" = "`xclip -o -sel c`" ]||
+    xclip -o -sel c >$dir/`Tr` ;;
+esac

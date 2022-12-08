@@ -1,0 +1,3 @@
+#!/bin/bash
+wat=`fd -tf . $cfg $paf $boo/tce/|fzf`
+[ "$wat" ] && vim $wat

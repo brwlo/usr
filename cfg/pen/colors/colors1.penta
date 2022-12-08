@@ -1,0 +1,63 @@
+" bw.colors.penta (wybff8z)
+
+ "First
+
+  delgr color-colors1
+  gr! colors | gr colors
+
+ "Status
+
+  hi StatusLine font-size: 11px;
+
+  hi StatusLineNormal -a background: #ff2400; color: #fff000;
+  hi StatusLineBroken -a background: #fff000; color: #ff0000
+  hi StatusLineSecure -a background: #008000; color: #ffffff;
+  hi StatusLineExtended -a background: #0038a8; color: #ffffff;
+
+  hi StatusWarningMsg -a color: black !important; background: transparent !important; font-weight: bold;
+
+ "Command
+
+  hi Normal -a background: black; color: #0fff00; font-size: 11px;
+  hi CmdLine -a color: yellow;
+  hi CmdOutput -a color: green; font-size: 11px;
+
+  hi Question -a background: black; color: red;
+
+ "Completion
+
+  hi CompDesc -a width: 50%;
+  hi CompItem[selected] -a color: red !important; width: 0%;
+  hi CompTitle -a background: black; color: red;
+  hi CompTitleSep -a background: yellow;
+
+  hi Filter -a color: red;
+  hi Key -a color: purple;
+
+ "Hints
+
+  hi Hint background: red !important;
+  hi Hint -a color: yellow;
+  hi Hint -a font: bold 10px "Droid Sans Mono", monospace !important;
+" hi Hint -a margin: -2
+  hi Hint -a padding: 0 1px;
+" hi Hint -a z-index: 9000000000;
+  hi -l=Hint Hint[active]
+
+ "Help
+
+  hi HelpBody -a background: black; color: white;
+
+ "Other
+
+  hi AddonButtons>* color: yellow;
+  hi AddonDescription color: white;
+  hi AddonHead>* -a border-bottom: 1px solid yellow;
+  hi AddonVersion color: white;
+
+  hi DownloadButtons>* color: yellow;
+
+  hi Indicator -a color: yellow;
+  hi Find background: green;
+  hi FontFixed -a font-size: 11px;
+  hi Tag -a color: yellow;

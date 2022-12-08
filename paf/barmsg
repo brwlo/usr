@@ -1,0 +1,6 @@
+#!/bin/bash
+file=$var/msg/txt time=6; mkdir -p $var/msg
+case $1 in
+  :) printf "%s" `head -n1 $file`;;
+  *) echo $@ >$file; sleep ${time}; rm $file;;
+esac

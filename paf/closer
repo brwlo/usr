@@ -1,0 +1,10 @@
+#!/bin/bash
+dir=$var/opener
+shopt -s lastpipe
+case $1 in
+  :) fd com\$ -x sh -c 'echo -e "{}\t`cat {}`"'|
+     dmenu -l 20|cut -f1|read com; id=${com%.*} ;;
+  *) ls -rt1 $dir/*pid|read pid; id=${pid%.*} ;;
+esac; read pid <$id.pid; read com <$id.com
+kill $pid
+rm $id*

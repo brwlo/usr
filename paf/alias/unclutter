@@ -1,0 +1,3 @@
+#!/bin/bash
+[ "$TCE" ] && { x tce-load -i libev.tcz; }
+$paf/bin/unclutter $@

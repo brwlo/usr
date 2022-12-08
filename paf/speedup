@@ -1,0 +1,9 @@
+#!/bin/bash
+# $1: speedup factor, $2: file
+bnm=${2%.*} ext=${2##*.} new=$bnm.speed.$ext
+fms=`frames "$2"`
+fac=`duration "$2"`
+fac=`echo "$fac/$1"|bc -l`
+fps=`echo "$fms/$fac"|bc -l`
+ffmpeg -i "$2" -vf "setpts=N/$fps/TB" -an $new
+mkdir -p del; mv $2 del; mv $new $2

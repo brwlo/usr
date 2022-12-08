@@ -1,0 +1,6 @@
+#!/bin/bash
+# https://www.systutorials.com/beginners-guide-x86-64-instruction-encoding/
+
+as -msyntax=intel -mnaked-reg < <(, "$@") -o $ram/tmp.o
+objdump -d --disassembler-options=intel-mnemonic $ram/tmp.o|
+  tail -n1|cut -f2-; rm $ram/tmp.o

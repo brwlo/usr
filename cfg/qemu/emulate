@@ -1,0 +1,31 @@
+#!/bin/bash
+# qemu-script
+
+# config
+emus=$tm/emulations
+img=$emus/img/*
+emu=$emus/$2
+[ -f $emu/dsk.cow ] \
+	&& dsk=$emu/dsk.cow || dsk=$emus/empty/dsk.cow
+
+# etc
+[[ $1 =~ 'win' ]] && mem=7G || mem=2G
+[[ $1 =~ 'win' ]] && wincpu=',hv_relaxed,hv_spinlocks=0x1fff,hv_vapic,hv_time'
+
+install- () {
+qemu-system-x86_64                 \
+	-m 7G -smp 4 -enable-kvm -boot d \
+	-cpu host$wincpu -cdrom $img     \
+	-drive file=$dsk,format=raw; }
+
+run- () {
+qemu-system-x86_64                   \
+	-m $mem -smp 4 -enable-kvm -boot d \
+	-cpu host$wincpu                   \
+	-nic user,hostfwd=tcp::10022-:22   \
+	-audiodev pa,id=snd0               \
+	-device VGA,vgamem_mb=1024         \
+  $dsk; }
+
+[[ $1 == 'i' ]] && install-
+[[ $1 == 'r' ]] && run-

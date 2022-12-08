@@ -1,0 +1,5 @@
+#!/bin/bash
+pkg=`fd tcz\$ $TCE/optional|fzf`
+for i in $pkg; do
+  [ "$pkg" ] && tce-load -i $pkg
+done

@@ -1,0 +1,10 @@
+# bash/func
+
+j  () { %`jobs|fzf|awk -F"[][]" '{print $2}'`; }
+pf () { ps -eo pid,user,comm | grep "$1"; }
+ph () { [ -z "$@" ] || kill -TSTP $(pf $1|fzy|awk '{print $2}'); }
+pr () { killall -18 $@; }
+pk () { pf "$1"|awk '{print $1}'|xargs kill; }
+
+export -f {j,pf,ph,pr,pk}
+complete -cf pf ph pr pk

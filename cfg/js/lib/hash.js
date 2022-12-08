@@ -1,0 +1,1 @@
+// library of hash functions

@@ -1,0 +1,28 @@
+# mpv/input-conf
+
+q      quit-watch-later
+Q      quit
+
+L      seek  1
+l      seek  10
+Ctrl+l seek  60
+
+H      seek -1
+h      seek -10
+Ctrl+h seek -60
+
+c no-osd cycle video-rotate 90
++ add video-zoom  0.25
+- add video-zoom -0.25
+K cycle-values loop inf no
+#n ab-loop; cycle pause
+##N run "/bin/bash" "-c" ">>${filename}.tsv echo -e ${ab-loop-a}\"\t\"${ab-loop-b}"
+#N run "/bin/bash" "-c" ">>${filename}.tsv echo -e ${=ab-loop-a}\"\t\"${=ab-loop-b}"
+
+
+# x run "sh" "-c" "mv -t del ${filename}"
+
+: script-message-to console type ""
+a script-message-to console type "set time-pos "
+n cycle pause; run "/bin/bash" "-c" ">>${filename}.tsv echo ${=time-pos}"
+v show-text ${=time-pos} 10000

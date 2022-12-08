@@ -1,0 +1,7 @@
+#!/bin/bash
+
+case $1 in
+f) cd $mkt/cli; fd '.+\.vmk$' `ls|dmenu -l 10`|xargs vmk;;
+n) cd $mkt/stu/notas; e `fd|dmenu -l 10`                ;;
+p) pwds $2                                              ;;
+esac

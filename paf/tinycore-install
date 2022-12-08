@@ -1,0 +1,52 @@
+#!/bin/bash
+tce-load -i syslinux
+
+# before starting
+#   partition pendrive, make 1st partition bootable
+
+(mt2 ${1}1 && mt2 ${1}2) || { echo err1; exit; }
+cd $mnt
+
+case $1 in
+h) echo 'usg: $0 <label>' ;;
+*)
+  skel=$dat/tc/skel
+  part1=`findmnt -no TARGET -o SOURCE ${1}1`
+  uuid1=`findmnt -no TARGET -o UUID ${1}1`
+  uuid2=`findmnt -no TARGET -o UUID ${1}2`
+  dir="${1}1"; mkdir -p "$dir"; cd "$dir"
+
+  sudo mkdir -p boo img opt tce; cd tce
+  sudo mkdir -p bin oth ondemand optional; cd -
+  sudo chown -R tc:staff tce/*
+  sudo chown -R root:staff opt
+
+  if [ ! -e "img/*" ]; then cd img
+  img="http://tinycorelinux.net/13.x/x86_64/release/distribution_files"
+  for i in corepure64.gz modules.gz modules64.gz rootfs64.gz vmlinuz64
+  do sudo curl -O $img/$i; done; cd -; fi
+
+  cd tce/optional
+  exts=$skel/extensions
+  repo="http://tinycorelinux.net/13.x/x86_64/tcz"
+  cat $exts | while read l; do
+  [ -e tce/optional/$l ] || sudo curl -O $repo/$l.tcz
+  done; cd -
+
+  sudo extlinux -i boo
+  sudo dd if=/usr/local/share/syslinux/mbr.bin of=${part1%?}
+
+  cp $skel/boo/* boo
+  sed -E "s/(opt|tce|restore)=UUID=/\0${uuid1}/g" \
+    $skel/boo/extlinux.conf >boo/extlinux.conf
+  sed -E "s/%label%/$1/" $skel/boo/boot.msg >boo/boot.msg
+
+  cp $skel/opt/* opt
+  sed -E "
+    s/%drv1%/${1}1/g   ; s/%drv2%/${1}2/g  ;
+    s/%uuid1%/$uuid1/g ; s/%uuid2%/$uuid2/g
+  " $skel/opt/bootsync.sh >opt/bootsync.sh
+
+  sed -E "s/%label%/$1/" $skel/tce/postinstall >tce/postinstall
+  chmod +x tce/postinstall
+;; esac

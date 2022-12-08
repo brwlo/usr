@@ -1,0 +1,7 @@
+#!/bin/bash
+dat=$var/dmenu; mkdir -p $dat
+prefix dmenu -i                \
+  -fn 'mono:bold:pixelsize=10' \
+  -nb '#ffc800' -nf black      \
+  -sb '#ff2400' -sf white      \
+  $@ |tee -a $dat/his

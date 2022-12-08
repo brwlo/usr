@@ -1,0 +1,26 @@
+#!/bin/bash
+# instagram-banner <video> <text>
+
+[[ $1 =~ :.* ]] && { opts=:; shift; }
+
+text="<b>${@:2}</b>"
+leng=$(echo $text|wc -c)
+lines=$(( 60 + 35 *( ($leng / 20)  ) ))
+
+dim=$(video-dimensions $1)
+x=$(echo $dim|cut -dx -f1)
+y=$(echo $dim|cut -dx -f2)
+
+mkdir -p banner && cd banner
+ffmpeg -i ../$1 -ss 00:00:00 -vframes 1 screenshot.jpg
+banner-make $opts banner ${x}x${lines} "$text"
+
+for i in $(seq -f '%05g' 0 50 $y); do
+	composite -geometry +0+$i banner.png screenshot.jpg $i.tmp
+done && ok=$(sxiv -o *tmp)
+
+[ ! $ok ] && { cd -; rm -r banner && exit; }
+
+clear; mv $ok ${ok%.*}.png; rm *tmp
+banner-overlay ../$1 banner.png ${ok%.*}
+cd - && rm -r banner

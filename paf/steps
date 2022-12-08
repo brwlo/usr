@@ -1,0 +1,15 @@
+#!/bin/bash
+
+[ "$1" = h ] && echo \
+  usage: intervals val step [min max] && exit
+
+case $1 in -|+) add="$1 1";; esac && shift
+
+out=`expr \( $1 / ${2:-10} \) $add`
+
+[ $3 ] && {
+  min=${3:-0} max=${4:-0}
+  [ `expr "$out < $min"` ] && out=$min
+  [ `expr "$out > $max"` ] && out=$max; }
+
+echo $out

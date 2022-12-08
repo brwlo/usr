@@ -1,0 +1,3 @@
+#!/bin/bash
+# gets password from tree files
+let nl=`, \`<$1 nl|fzf|cut -f1\``; let nl++; , `sed -n ${nl}p $1`|xi

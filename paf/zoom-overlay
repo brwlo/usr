@@ -1,0 +1,4 @@
+#!/bin/bash
+ffmpeg -y -i *tela.mp4 -i *cara.mp4 -filter_complex \
+  '[0:v]crop=w=in_w-632:h=in_h-20:x=0[v0];[1:v]scale=320:180[v1];[v0][v1]overlay=shortest=1:x=W-w:y=(H/100)' \
+  out.mp4

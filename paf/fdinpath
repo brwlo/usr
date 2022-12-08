@@ -1,0 +1,4 @@
+#!/bin/bash
+for i in `IFS=:; echo $PATH`
+	do [ -d "$i" ] && fd "$1" "$i"
+done

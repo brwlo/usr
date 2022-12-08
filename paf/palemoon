@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/local/bin/palemoon -pentadactyl "++cmd 'source ~/save/cfg/rc.pen'"

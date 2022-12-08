@@ -1,0 +1,9 @@
+#!/bin/bash
+# photos-rename
+[ "$TCE" ] && Image-ExifTool
+exiftool -r -P -s3 -d \
+	"%Y%m%d%H%M%S%%+.2c.%%le" \
+	'-filename<FileModifyDate'\
+	'-filename<DateTimeOriginal'\
+	'-filename<CreateDate'\
+	'-filename<DateCreated' $@

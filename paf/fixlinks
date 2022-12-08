@@ -1,0 +1,3 @@
+#!/bin/bash
+fd -d1 -tl|xargs -I% sh -c \
+  "ln -sf `readlink %|sed "s/$2/$3/"` `basename %`"

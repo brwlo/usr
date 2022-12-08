@@ -1,0 +1,32 @@
+" styles.pen
+
+  gr! sty-chrome | gr sty-chrome
+
+  sty -n view-source view-source:* * {background: black; color: white;}
+  sty -n view-source -a view-source:* span {white-space: pre-wrap; word-wrap: break-word;}
+  sty -n view-source -a view-source:* [color:black] {color: white !important;}
+  sty -n view-source -a view-source:* .attribute-name {color: white !important;}
+ 
+  "manipulation
+  sty -n images.hide http*,about:* img {visibility: hidden !important;}
+  sty -n images.remove http*,about:* img {display: none !important;}
+  sty -n margin.reduce http* body {padding: 0 10em !important;}
+
+  styd! -g sty-chrome
+  stye -g sty-chrome -n view-source
+
+  gr! sty-sites | gr sty-sites
+
+  "all sites
+  sty -n overlays http(s)?://.* [class*=overlay],[class*=modal] {display: none !important;}
+  sty -n google.translate http(s)?://.* .skiptranslate {display: none !important;}
+  styd -n overlays
+
+  "some sites
+
+  sty -n outlook outlook(.live)?.com ._n_h {right: 0 !important;}
+  sty -n outlook outlook(.live)?.com -a a#GoToNextRegion {right: 0 !important;}
+  sty -n outlook outlook(.live)?.com -a a#GoToNextRegion+div {right: 0 !important;}
+  sty -n drudge drudgereport.com :not(font) {background: black !important; color: white !important;}
+  sty -n twitter twitter.com [data-testid='sidebarColumn'] {display: none !important;}
+  sty -n oantagonista www.oantagonista.com [id*=onesignal] {display: none !important;}

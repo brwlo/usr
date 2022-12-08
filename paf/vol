@@ -1,0 +1,24 @@
+#!/bin/bash
+
+shopt -s {lastpipe,expand_aliases}
+alias set="amixer sset Master"
+alias get="amixer sget Master|tail -n1"
+alias awk="awk -F'[][]'"
+
+amixer sget Master|tail -n1|
+  awk -F'[][]' '{print $2}'|
+  read lev; lev=${lev/\%/}
+lev=`expr $lev / 10`0
+
+case $1 in
+  u) lev=`expr ${lev:-0} / 10 + 1`0; set ${lev}%;;
+  d) lev=`expr ${lev:-0} / 10 - 1`0; set ${lev}%;;
+  M) lev=100; set ${lev}%                       ;;
+  h) lev=50; set ${lev}%                        ;;
+  U) set unmute && amixer sset Speaker unmute   ;;
+  m) set toggle                                 ;;
+  n) set ${2}%; vol U                           ;;
+  s) echo $lev                                  ;;
+  S) get|awk '{print $6}'|sed 's/off/-/;s/on/♪/';;
+  *) vol n 80                                   ;;
+esac

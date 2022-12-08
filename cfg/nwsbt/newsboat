@@ -1,0 +1,6 @@
+#!/bin/bash
+mkdir -p $tm/caches/newsboat
+BROWSER=qutebrowser /usr/bin/newsboat \
+	-C $cm/newsboat/config \
+	-u $vm/newsboat/urls \
+	-c $tm/caches/newsboat/cache.db

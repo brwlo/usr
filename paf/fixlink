@@ -1,0 +1,2 @@
+#!/bin/bash
+ln -sf `readlink "$1"|sed "s/$2/$3/"` "`basename $1`"

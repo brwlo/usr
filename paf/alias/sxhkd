@@ -1,0 +1,2 @@
+#!/bin/bash
+exec prefix sxhkd -c $cfg/sxhkd/mode1 $@

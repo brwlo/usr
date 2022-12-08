@@ -1,0 +1,20 @@
+#!/bin/bash
+
+whi='\e[1;97m'
+red='\e[1;31m'
+ylw='\e[1;33m'
+grn='\e[1;32m'
+blu='\e[1;34m'
+mag='\e[1;35m'
+cyn='\e[1;36m'
+
+case $1 in
+  0|whi|white)   echo -e $whi ${@:2} ;;
+  1|red)         echo -e $red ${@:2} ;;
+  3|ylw|yellow)  echo -e $ylw ${@:2} ;;
+  4|grn|green)   echo -e $grn ${@:2} ;;
+  5|cyn|cyan)    echo -e $cyn ${@:2} ;;
+  6|blu|blue)    echo -e $blu ${@:2} ;;
+  7|mag|magenta) echo -e $mag ${@:2} ;;
+  :)             echo -e $1 ${@:2}   ;;
+esac

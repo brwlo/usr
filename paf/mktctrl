@@ -1,0 +1,17 @@
+#!/bin/bash
+dir=$out/mkt/adm; cd $dir
+case $1 in # last edit open all menu
+  :h) echo ':l last :e edit :o open :a all'
+      echo ':f fzf  :s show :m menu * last'  ;;
+  :L) ls -1Art|tail -n1                      ;;
+  :e) e `mktctrl :L`                         ;;
+  :o) eval $term -e "mktctrl :e"             ;;
+  :l) tree2tsv `mktctrl :L`                  ;;
+  :a) for i in *tree; do tree2tsv $i; done   ;;
+  :f) mktctrl :a|fzf                         ;;
+  :s) (mktctrl :a|head -n1;
+       mktctrl :a|fro 2|tac)|dmenu -l 10     ;;
+  :m) opt=`echo -e ":s\n:o"|dmenu -p mktctrl`
+      mktctrl $opt;;
+   *) mktctrl :l                             ;;
+esac

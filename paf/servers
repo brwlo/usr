@@ -1,0 +1,22 @@
+#!/bin/bash
+[ "$TCE" ] && x openssh- &
+
+[ "$1" = h ] && {
+  echo use:
+  echo '> servers log'
+  echo '> servers syn <dir> <dir>'
+  echo '> servers pul <dir> <dir>'
+  exit; }
+
+shopt -s lastpipe
+db=$dat/ssh/servers.tsv
+fro 2 $db|fzf|read url adr use por dir
+[ "$por" = - ] && por= || por="-p $por"
+dir=":$dir"
+
+case $1 in
+log) ssh $por $use@$url ;;
+#syn) echo rsync -e "ssh $por" $use@$url${dir:-:$2} $3 ;;
+#pul) echo rsync -e "ssh $por" $use@$url${dir:-:$2} $3 ;;
+mnt) sshfs $por $use@$url${dir:-$2} $net ;;
+esac

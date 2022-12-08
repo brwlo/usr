@@ -1,0 +1,5 @@
+#!/bin/bash
+num=${1:-15} dir=$var/xclip cbd=`xo`; cd $dir
+out=`(ls -Art|tail -n$num|tac|xx -n1 cat)|
+  dmenu -l $num -p regs`
+[ "$out" ]&& (echo "$out"|xi) ||exit

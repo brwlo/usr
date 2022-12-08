@@ -1,0 +1,6 @@
+#!/bin/bash
+dir="$mnt/ssd4/opt/tmp/The"
+cd $ram; mkdir -p mentalist
+fd -tf . "$dir"*|x, sh -c \
+  'ln -s "%" mentalist/"`bn "%"`"'
+fd . mentalist -x sanitfname {}

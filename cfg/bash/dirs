@@ -1,0 +1,41 @@
+#!/bin/bash
+
+for i in $usr/*; do export ${i##*/}=$i; done
+
+  [ $SHLVL -eq 1 ] && {
+    export opath=$PATH
+    export PATH=$paf/alias:$paf/bin/:$paf/tmp:$paf:$PATH
+    fdmnts; }
+
+  mkdir -p ~/.var
+  [ -d "$var" ]    || ln -s ~/.var            $var
+  [ -d "$mnt" ]    || ln -s /mnt/drv          $usr/mnt
+  [ -L "$out" ]    || ln -s /mnt/drv/old2/usr $usr/out
+  [ -e /root/usr ] || ln -s ~/usr             /root/usr
+
+for i in $usr/*; do export ${i##*/}=$i; done
+
+for i in $usr/*; do
+  case "${i##*/}" in
+  crp|mid|wrk) continue ;;
+  var) mkdir -p $var/wrk
+       [ -e "$ram" ] || ln -s $var/wrk $usr/ram
+       [ -e "$crp" ] || ln -s $var/crp $usr/crp
+       [ -e "$wrk/.var" ] || ln -s $var/wrk $wrk/.var ;;
+  ram) [ -e $ram/drv ] ||
+          ln -s $mnt/ssd4/opt/ram $ram/drv; continue ;;
+    *) mkdir -p $git/.${i##*/}
+       [ -e "$i/git" ] || ln -s $git/.${i##*/} $i/git
+       mkdir -p $mid/.${i##*/}
+       [ -e "$i/mid" ] || ln -s $mid/.${i##*/} $i/mid
+       mkdir -p $wrk/.${i##*/}
+       [ -e "$i/wrk" ] || ln -s $wrk/.${i##*/} $i/wrk ;;
+  esac
+done 2>/dev/null; unset i
+
+case `uname -r` in
+	*tinycore*)  sys=tinycore ;;
+	*archlinux*) sys=archlinux;;
+esac;
+
+source $cfg/xdg/config.sh

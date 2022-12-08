@@ -1,0 +1,63 @@
+#!/bin/bash
+
+[ $UID -eq 0 ] && TSSLOTHS=4
+
+vbeg="man-db-doc"
+vbeg+=" man-pages"
+vbeg+=" libpci"
+vbeg+=" pciutils"
+vbeg+=" gtk4"
+vbeg+=" xdg-utils"
+vbeg+=" xdg-user-dirs"
+
+vfon+="Xorg-fonts"
+vfon+=" dejavu-fonts-ttf"
+vfon+=" fontconfig"
+vfon+=" fontconfig-dev"
+vfon+=" libXfont"
+vfon+=" libXfont2"
+vfon+=" libXfont2-dev"
+vfon+=" liberation-fonts-ttf"
+vfon+=" libfontenc"
+vfon+=" libfontenc-dev"
+vfon+=" nimbus-sans-fonts"
+vfon+=" notocjk-regular-fonts-ttc"
+vfon+=" notocoloremoji-fonts-ttf"
+vfon+=" oxygen-fonts"
+vfon+=" unicode-emoji"
+vfon+=" terminus-fonts"
+
+vmid+="pavucontrol"
+vmid+=" ffmpeg4-dev"
+vmid+=" mpv"
+vmid+=" yt-dlp"
+vmid+=" imagemagick"
+vmid+=" Image-ExifTool"
+vmid+=" gimp2"
+vmid+=" ghostscript"
+vmid+=" poppler07-bin"
+
+#voth+=""
+
+[[ "$@" =~ beg ]] && for i in $vbeg
+do ts tce-load -i $i; done
+
+[[ "$@" =~ fon ]] && for i in $vfon
+do ts tce-load -i $i; done
+
+[[ "$@" =~ mid ]] && for i in $vmid
+do ts tce-load -i $i; done
+
+[[ "$@" =~ oth ]] && for i in $voth
+do ts tce-load -i $i; done
+
+# run commands once at start
+f=$dat/run/tasks
+while read l; do ts $l; done <$f && >$f
+
+mousetog :d
+setxkbmap-
+
+ts ts -K
+
+unset {l,i,vbeg,vfon,vmid,voth}

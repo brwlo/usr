@@ -1,0 +1,6 @@
+#!/bin/bash
+if [ $1 ]; then zathura "$1"
+elif xclip -o|xurls; then
+	xclip -o|xurls >> $vm/zathura/history
+	curl "$(xclip -o|xurls)" -o - | zathura -
+fi

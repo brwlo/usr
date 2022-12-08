@@ -1,0 +1,2 @@
+#!/bin/sh
+yes|backup && /sbin/reboot

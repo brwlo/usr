@@ -1,0 +1,2 @@
+#!/bin/bash
+prefix nvim --cmd 'se rtp^=$cfg/vim/ sd+="n~$dat/vim/_shada"' "$@"

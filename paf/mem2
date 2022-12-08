@@ -1,0 +1,2 @@
+#!/bin/sh
+free -g|awk '/Mem/{printf "%s+%s",$3,$5}'|bc

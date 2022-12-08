@@ -1,0 +1,10 @@
+#!/bin/bash
+{ x tce-load -i ncursesw.tcz
+  x tce-load -i ncursesw-dev.tcz
+  x tce-load -i ncursesw-utils.tcz
+  x tce-load -i ncursesw-terminfo.tcz
+  x tce-load -i pinentry-curses.tcz
+  x tce-load -i yt-fzf.tcz
+} 2>&1 >/dev/null
+
+prefix ytfzf $@

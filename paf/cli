@@ -1,0 +1,6 @@
+#!/bin/bash
+shopt -s lastpipe; dmenu="
+dmenu -b -i -l 10 -nb black 
+-nf white -sb white -sf black"
+<$var/xdg/cache/dmenu_run $dmenu|
+read cmd; exec $term -c "exec $cmd"

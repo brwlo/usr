@@ -1,0 +1,3 @@
+#!/bin/bash
+bin=/etc/sysconfig/tcedir/ondemand/openssh
+[ "$TCE" ] && { $bin && setxkbmap-; } || $0

@@ -1,0 +1,17 @@
+#!/bin/bash
+tce-load -i libplist
+tce-load -i libimobiledevice
+tce-load -i libimobiledevice-1.3.0
+tce-load -i fuse
+tce-load -i fuse-dev
+tce-load -i fuse3-dev
+tce-load -i ifuse
+tce-load -i usb-utils
+tce-load -i usbmuxd
+setxkbmap-
+
+dir=/mnt/iph; mkdir -p $dir
+case $1 in
+  u) fusermount -u $dir ;;
+  *) ifuse $dir         ;;
+esac

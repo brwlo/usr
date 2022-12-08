@@ -1,0 +1,98 @@
+" marks.pen
+
+gr! marks | gr marks
+
+"search
+  js services.browserSearch.getEngines().forEach(e => e.hidden = true)
+  sil bmark -T src -k s -t '? ddg' ddg.gg/?q=%s
+  se defsearch=s
+
+"qmarks
+
+  sil qma B youtube.com/channel/UCq1COd1BN71rEAyvSM4OIow
+  sil qma E outlook.live.com
+  sil qma I	~/i
+  sil qma J projudi.tjpr.jus.br
+  sil qma U	~/u
+  sil qma D	~/u/v/downloads/
+  sil qma Y	~/u/v/captures/
+  sil qma W web.whatsapp.com
+
+  sil exe 'qma H ' + prefs.get('browser.startup.homepage')
+
+ ".scheduled
+
+  if (prefs.get('bw.ts').substring(6,8)==01 &&
+  \   prefs.get('bw.updates.marks.month')<1)
+  \  || prefs.get('bw.updates.marks.applied')!='yes'
+
+  se! bw.updates.marks.month+=1
+  se! bw.updates.marks.applied='yes'
+
+  sil bmark -T src -k r -t 'src: ddg, region' ddg.gg/?q=r:%s
+  sil bmark -T src -k u -t 'src: ddg, site' ddg.gg/?q=site:%s
+
+  sil bmark -T src -k p -t 'arq: gcache' ddg.gg/?q=!cache%20%s
+  sil bmark -T src -k q -t 'arq: wayback' ddg.gg/?q=!wayback%20%s
+  sil bmark -T src -k r -t 'arq: archiveis' ddg.gg/?q=!archiveis%20%s
+  sil bmark -T src -k z -t 'sec: bigurl' urlrevealer.appspot.com/reveal?url=%s
+
+  sil bmark -T src -k i -t 'img: ddg' ddg.gg/?q=!i%20%s
+  sil bmark -T src -k j -t 'img: google' ddg.gg/?q=!gi%20%s
+  sil bmark -T src -k k -t 'img: tineye' ddg.gg/?q=!tineye%20%s
+  sil bmark -T src -k v -t 'vid: youtube' ddg.gg/?q=!yt%20%s
+
+  sil bmark -T src -k d -t 'dic: pt, priberam' ddg.gg/?q=!dlpo%20%s
+  sil bmark -T src -k e -t 'dic: en, farlex' ddg.gg/?q=!d%20%s
+  sil bmark -T src -k w -t 'ref: wiki' ddg.gg/?q=!w%20%s
+
+  elif prefs.get('bw.ts').substring(6,8) != 01
+  se! bw.updates.marks.month&
+
+  fi
+
+  if prefs.get('bw.updates.marks.week') < 1
+  se! bw.updates.marks.week+=1
+
+  se! bw.qmarks.international='drudgereport.com'
+  se! bw.qmarks.international+=' | twitter.com/realDonaldTrump'
+  se! bw.qmarks.international+=' | twitter.com/HNIJohnMiller'
+  se! bw.qmarks.international+=' | youtube.com/channel/UCifzRVl4nx5dZOYiuM7Q2HQ'
+  se! bw.qmarks.international+=' | theconservativetreehouse.com'
+  se! bw.qmarks.international+=' | quodverum.com'
+
+  se! bw.qmarks.national='blogdoolavo.com'
+  se! bw.qmarks.national+=' | olavodecarvalhofb.wordpress.com/category/notas'
+  se! bw.qmarks.national+=' | mobile.twitter.com/jairbolsonaro'
+  se! bw.qmarks.national+=' | mobile.twitter.com/filgmartin'
+  se! bw.qmarks.national+=' | mobile.twitter.com/BlogDoPim'
+  se! bw.qmarks.national+=' | mobile.twitter.com/flaviomorgen'
+  se! bw.qmarks.national+=' | mobile.twitter.com/sensoinc'
+  se! bw.qmarks.national+=' | mobile.twitter.com/lsentoes'
+  se! bw.qmarks.national+=' | mobile.twitter.com/AconteceCaralho'
+  se! bw.qmarks.national+=' | mobile.twitter.com/JoelAlexandreM'
+  se! bw.qmarks.national+=' | mobile.twitter.com/terca_livre'
+  se! bw.qmarks.national+=' | mobile.twitter.com/conexaopolitica'
+  se! bw.qmarks.national+=' | mobile.twitter.com/joicehasselmann'
+  se! bw.qmarks.national+=' | conexaopolitica.com.br'
+  se! bw.qmarks.national+=' | tercalivre.com.br'
+  se! bw.qmarks.national+=' | s1n7ese.com'
+
+  elif prefs.get('bw.ts').substring(14) != 2
+  se! bw.updates.marks.week&
+
+  fi
+
+ ".once
+
+  if prefs.get('bw.updates.marks.once') < 1
+  se! bw.updates.marks.once+=1
+
+  delbm! | feedkeys -m prompt yes<cr>
+
+  fi
+
+  "qmarks
+  sil exe 'qma N ' + prefs.get('bw.qmarks.international')
+  sil exe 'qma O ' + prefs.get('bw.qmarks.national')
+  sil exe 'qma P ' + prefs.get('bw.qmarks.humor')

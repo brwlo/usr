@@ -1,0 +1,3 @@
+#!/bin/bash
+# https://stackoverflow.com/questions/1132601/how-to-convert-a-jpeg-image-into-svg-format-using-imagemagick
+convert -channel RGB -compress None $1 bmp:- | potrace -s - -o ${1%.*}.svg

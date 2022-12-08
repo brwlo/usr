@@ -1,0 +1,21 @@
+#!/bin/bash
+case $1 in
+  :) devour=; shift ;;
+  *) devour=devour  ;; esac
+clk=`t` dir=$var/opener
+mkdir -p $dir; sanitfname "$@"
+mime=`file -bL --mime-type "$@"`
+shopt -s lastpipe; case $mime in
+*/postscript*) echo $devour mupdf "$@"     ;;
+      */epub*) echo $devour mupdf "$@"     ;;
+       */pdf*) echo $devour mupdf "$@"     ;;
+      *video*) echo $devour mpv "$@"       ;;
+      *audio*) echo mpv "$@"               ;;
+       */gif*) echo $devour mpv --loop "$@";;
+      *image*) echo $devour sxiv "$@"      ;;
+*office*word*) echo lowriter $f            ;; 
+   text/plain) echo e "$@"                 ;;
+            *) echo xdg-open "$@"          ;;
+esac|read com; $com &
+>>$dir/$clk.pid echo $!
+>>$dir/$clk.com echo $com

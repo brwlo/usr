@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/bin/zathura -c $cm/zathura/config -d $vm/zathura/data "$@"

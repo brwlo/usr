@@ -1,0 +1,37 @@
+#!/bin/bash
+
+calc () {
+  s='10#'${1/:/*3600+'10#'} s=${s/:/*60+'10#'} s=$(( $s )); echo $s
+}; calc=calc
+
+speed () {
+  fms=`frames `
+  fps=`echo "$fms/$dur"|bc -l`
+  echo $fps; }
+
+exec <$1; read raw; read inp
+[ "$raw" = "raw" ] && calc="echo"
+#echo $raw :: $inp
+i=0 j=0 str= stm=
+while read beg end bef aft out
+do
+  n=`printf '%04d' $i`
+  [ "${bef//--/}" ] && bef=${bef//--/}, || bef=
+  [ "${aft//--/}" ] && aft=,${aft//--/} || aft=
+  speed= aspeed=
+  [ "$raw" != "raw" ] && dur=`$calc $end`-`$calc $beg`
+  [ "$raw" =  "raw" ] && { dur=`echo $end-$beg|bc -l`; }
+  [ "$out" != ignore ] && {
+    [[ "$out" =~ speedup\ (.*) ]] && {
+      dur=`echo "($dur)/${BASH_REMATCH[1]}"|bc -l`
+      speed=",setpts=PTS/$dur"
+      aspeed=",asetpts=PTS/$dur,volume=enable:volume=0"
+    }
+    str+="[0:v]${bef}trim=` $calc $beg`:`$calc $end `,setpts=PTS-STARTPTS$speed${aft}[v$j];"
+    str+="[0:a]atrim=`$calc $beg`:`$calc $end`,asetpts=PTS-STARTPTS$aspeed[a$j];"
+    stm+="[v${j}][a$j]"; let j++; }; let i++
+    beg= end= bef= aft= out=
+done;# let j=2*$j
+echo ffmpeg -i "$inp" -fflags +genpts \
+  -filter_complex "${str}${stm}concat=n=$j:v=1:a=1[outv][outa]" \
+  -map "[outv]" -map "[outa]" -r 29.97 o.${inp%.*}.mp4

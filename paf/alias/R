@@ -1,0 +1,12 @@
+#!/bin/bash
+[ "$TCE" ] && [ ! -f "`prefix : R`" ] && $TCE/ondemand/R
+
+for i in $dat/r/libs/*.tcz; do
+  bnm=`basename $i` dir=$var/r/libs/${bnm%.*}
+  mkdir -p $dir &&
+  sudo mount -o loop -t squashfs "$i" "$dir" 2>/dev/null 
+done
+
+R_LIBS_USER=$var/r/libs \
+R_ENVIRON_USER=$cfg/r/renviron \
+prefix R $@

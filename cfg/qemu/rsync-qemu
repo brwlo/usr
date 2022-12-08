@@ -1,0 +1,6 @@
+# qemu-rsync
+# rsync from host to guest
+
+h () { echo "qemu-rsync <user> <src> <dest> [dry]"; }
+[[ $4 =~ dry ]] && dry=n
+rsync -av$dry $1@10.0.2.2:$2 $3

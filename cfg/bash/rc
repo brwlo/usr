@@ -1,0 +1,27 @@
+# bash/rc
+
+[[ $- != *i* ]] && return
+
+shopt -u cmdhist
+shopt -u histverify
+shopt -s autocd
+shopt -s direxpand
+shopt -s globstar
+shopt -s histappend
+shopt -s nocaseglob
+shopt -s lithist
+
+uuid=509980a1-7677-4b83-a3ab-7789859d17cb
+dir=`findmnt -no TARGET -S UUID=$uuid`/usr
+[ -d "$dir" ] || sudo mount UUID=$uuid
+[ -L ~/usr  ] || ln -sf "$dir" ~/usr
+export usr=~/usr
+
+source $usr/cfg/bash/dirs
+source $cfg/linux/$sys/partic
+source $cfg/bash/func
+source $cfg/bash/vars
+source $cfg/bash/alia
+source $cfg/bash/bind
+source $cfg/bash/load
+source $cfg/bash/exec

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+draw="gravity south
+rectangle 0,0 720,200
+font Consolas
+font-size ${fontsize:-50}
+stroke #214930
+stroke-width 4
+text 1,1 '""${@:2}""'"
+
+echo :: $draw ::
+
+convert \
+-size 720x60 xc:transparent \
+-fill '#dff4e6' -draw "$draw" \
+$1.png

@@ -1,0 +1,7 @@
+#!/bin/bash
+[ "$TCE" ] && tce-load -i firefox.tcz
+home=$HOME HOME=$var/ffox
+XDG_DESKTOP_DIR=$var/wrk
+#[ -e $HOME/.mozilla/native-messaging-hosts ] \
+#  || $cfg/3dac/native
+prefix firefox $@

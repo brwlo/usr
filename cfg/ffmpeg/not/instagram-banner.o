@@ -1,0 +1,4 @@
+#!/bin/bash
+banner-make '#banner' $(video-dimensions $1|cut -dx -f1)x${2:-100} \
+	"$(read -p 'text: ';echo "<b>$REPLY</b>")"
+banner-overlay $1 '#banner.png' ${3:-785}

@@ -1,0 +1,16 @@
+#!/bin/bash
+#ts=`date +%Y%m%d%H%M%S`
+#printf "file %s\n" cut* >tmp.$ts
+#while read file name; do
+#	echo ffmpeg -i "$name" "$name.ts" >> join.do
+#done <tmp.$ts
+#files=(*.ts) ifs=$IFS IFS="|"
+#files="${files[*]}"; IFS=$ifs
+#echo ffmpeg -f concat:"$files" -i tmp.$ts join.$ts.mp4 >> join.do
+#rm tmp.$ts
+
+ts=`date +%Y%m%d%H%M%S`
+printf "file %s\n" *mp4 >tmp.$ts
+ext=`head -n1 tmp.$ts` ext=${ext##*.}
+ts ffmpeg -fflags +genpts -f concat -i tmp.$ts join.$ext
+#rm tmp.$ts

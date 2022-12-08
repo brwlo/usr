@@ -1,0 +1,3 @@
+#!/bin/bash
+PATH=$opath
+surf -ts ${1:-ddg.gg}

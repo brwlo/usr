@@ -1,0 +1,29 @@
+if (interactive()) {
+
+  # repos
+  local({r <- getOption("repos");
+    r["CRAN"] <- "https://cran-r.c3sl.ufpr.br/";
+    options(repos=r) })
+
+  # load
+  library(colorout)
+  library('crayon')
+
+  # options
+  options(prompt=bold(green("R> ")))
+  options(menu.graphics=FALSE)
+
+  .Screen <- function(
+   width=as.integer(system(
+    "stty -a|head -n 1|awk '{print $7}'|sed 's/;//'",intern=T)))
+   { options(width=width) }; .Screen()
+
+  #abbreviations
+  p <- function (...) { paste(...) }
+  t <- function (x) { typeof(x) }
+  cl <- function () { system("clear") }
+
+  #do
+  system("clear")
+
+}

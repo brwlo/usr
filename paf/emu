@@ -1,0 +1,26 @@
+#!/bin/bash
+
+boo="order=c"
+mem="4G,slots=3,maxmem=5G"
+net="user,id=bwnet,hostfwd=tcp::10022-:22"
+aud="pa,id=snd0"
+dev="VGA,vgamem_mb=1024"
+cpu="host"
+win=",hv_relaxed,hv_spinlocks=0x1fff,hv_vapic,hv_time"
+dsk="file=$1,format=qcow2"
+drv="file=$2,format=raw,media=cdrom"
+
+[ "$3" = win ] && cpu+=$win
+
+# -enable-kvm      \
+# -cpu        $cpu \
+qemu-system-x86_64 \
+  -smp           4 \
+  -m          $mem \
+  -boot       $boo \
+  -netdev     $net \
+  -audiodev   $aud \
+  -device     $dev \
+$@
+# -drive      $dsk \
+# -drive      $drv

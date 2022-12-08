@@ -1,0 +1,4 @@
+#!/bin/bash
+[ "$1" = w ] && cp `sxiv $mid/img/wallpapers` $dat/wpp/wp
+[ "$1" = l ] && cp `sxiv $mid/img/wallpapers` $dat/wpp/lock
+exec feh --no-fehbg --bg-scale $dat/wpp/wp

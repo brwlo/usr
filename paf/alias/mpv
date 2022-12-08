@@ -1,0 +1,9 @@
+#!/bin/bash
+[ "$TCE" ] && x $TCE/ondemand/mpv
+#later=$dat/mpv/watch-latter
+later=$var/mpv/watch-latter; mkdir -p $later
+exec prefix mpv                    \
+  --include=$cfg/mpv/config        \
+  --input-conf=$cfg/mpv/input-conf \
+  --watch-later-directory=$later   \
+  $@

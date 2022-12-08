@@ -1,0 +1,7 @@
+#!/bin/bash
+/usr/bin/setxkbmap \
+	-layout br,ua \
+	-option caps:swapescape \
+	-option shift:both_capslock \
+	-option ctrl:menu_rctrl \
+	-option grp:alt_caps_toggle

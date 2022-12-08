@@ -1,0 +1,2 @@
+#!/bin/bash
+eval bmk all ${1:-:g 2|xi} #; wv2||mupdf `xo`

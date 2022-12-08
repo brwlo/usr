@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo -e "produto\tloja\tpreço\tdata"|expand -t 36
+<$fin/wrk/*tabela.tree awk '
+  {RS="";FS="\n\t*"}
+  {printf "%s\t%s\t%s\t%s\n",$1,$2,$3,$4}
+  '| fro 3|sort|expand -t 36

@@ -1,0 +1,1 @@
+: write  stdout write-file ;

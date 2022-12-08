@@ -1,0 +1,14 @@
+#!/bin/bash
+tmp=$var/rename; mkdir -p $tmp
+vim=/usr/local/bin/vim # vim alias in $paf doesn't work
+for i in "${@}"; do
+	path=`realpath "$i"`
+	head=`dirname  "$path"`
+	name=`basename "$path"`
+	>> rename2.tmp echo -e mv \-b \""$path"\""\t\t\t"\"$head\/
+	echo $name
+done | vim '+file rename.tmp' - &&
+paste -d '' rename2.tmp rename.tmp | sed 's/$/"/' |
+vim '+file rename3.tmp' -
+chmod +x rename3.tmp; ./rename3.tmp
+rm rename*.tmp

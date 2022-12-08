@@ -1,0 +1,9 @@
+ " modes
+
+  "main > video (vid)
+  js if (!modes.VIDEO) {
+  \modes.addMode('VIDEO',
+  \ {char: 'vid',
+  \  description: 'bw: manipulate youtube videos.',
+  \  bases: [modes.MAIN]},
+  \  "")}

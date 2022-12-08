@@ -1,0 +1,10 @@
+#!/bin/bash
+x tce-load -i sed; reload
+cat - | awk -F'\t' '{print $3}'|
+while read l; do
+  for i in $l; do
+    [ `, $i|wc -c` -gt 4 ] &&
+    , $i|sed 's/[a-z]/\U&/'||, $i
+  done
+done|tr '\n' ' '|sed 's/^./\U&/' |xi
+, `xo`|xi

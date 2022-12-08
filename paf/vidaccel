@@ -1,0 +1,4 @@
+#!/bin/bash
+ts ffmpeg -i "$1" -fflags +genpts -filter_complex \
+  "[0:v]setpts=1/$2*PTS[v];[0:a]atempo=$2,asetrate=44100*1,aformat=sample_rates=44100[a]" \
+  -map "[v]" -map "[a]" $1.mp4

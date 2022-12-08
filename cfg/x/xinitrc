@@ -1,0 +1,9 @@
+# xinitrc
+
+xrdb $cfg/x/xdefaults.tc &
+sleep 2
+bar &
+wallpaper &
+unclutter --timeout 1 &
+$paf/bin/dwm &
+(sleep 1; setxkbmap- && mousetog :d && sxhkd & )

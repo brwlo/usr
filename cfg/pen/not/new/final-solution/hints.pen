@@ -1,0 +1,24 @@
+" hints.pen
+
+"extended hints
+
+  js hints.addMode('e', 'alt hints (o)', e=>buffer.followLink(e,dactyl.CURRENT_TAB));
+  js hints.addMode('E', 'alt hints (t)', e=>buffer.followLink(e,dactyl.NEW_TAB));
+
+  js hints.addMode('k', 'reverse img (o)', e=>{commands.execute('Xo k '+e.src)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('K', 'reverse img (t)', e=>{commands.execute('Xt k '+e.src)}, node=>{if (node !== -1) return true; return false})
+
+  js hints.addMode('p', 'google cache (o)', e=>{commands.execute('Xo p '+e)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('P', 'google cache (t)', e=>{commands.execute('Xt p '+e)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('q', 'wayback (o)',      e=>{commands.execute('Xo q '+e)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('Q', 'wayback (t)',      e=>{commands.execute('Xt q '+e)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('r', 'archive.is (o)',   e=>{commands.execute('Xo r '+e)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('R', 'archive.is (t)',   e=>{commands.execute('Xt r '+e)}, node=>{if (node !== -1) return true; return false})
+
+  js hints.addMode('u', 'search site (o)', e=>{CommandExMode().open('Xo u '+e.host)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('U', 'search site (t)', e=>{CommandExMode().open('Xt u '+e.host)}, node=>{if (node !== -1) return true; return false})
+
+  js hints.addMode('x', 'getTitle', e => commands.execute(
+  \"!sleep 3; curl -s '" + e + "' " + "|grep -i '<title>' "), node => {if (node !==-1) return true; return false} )
+  js hints.addMode('z', 'expand url (o)', e=>{commands.execute('Xo z '+e)}, function(node){if (node !== -1) return true; return false})
+  js hints.addMode('Z', 'expand url (t)', e=>{commands.execute('Xt z '+e)}, function(node){if (node !== -1) return true; return false})

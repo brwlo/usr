@@ -1,0 +1,4 @@
+#!/bin/bash
+fzf="fzf --tabstop=36"
+v=`<$cfg/ffmpeg/ffinder2.tsv $fzf|awk -F'\t' '{print $2}'` #|xi -rmlastnl; xo
+v=`echo "$v"`; eval "echo $v"

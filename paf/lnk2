@@ -1,0 +1,4 @@
+#!/bin/bash
+rp=`realpath "$2"`
+bn=`basename "$rp"`
+[ "$1" ] && ln -s "$rp" "$usr/$1/$bn"

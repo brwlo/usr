@@ -1,0 +1,2 @@
+#!/bin/bash
+xprop -root|grep "_NET_ACTIVE_WINDOW(WINDOW)"|cut -b41-

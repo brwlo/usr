@@ -1,0 +1,3 @@
+x tce-load -i qemu
+x tce-load -i qemu-system-i386
+qemu-system-i386 -drive format=raw,file=/home/tc/usr/boo/tce/oth/colorforth/cf2019.img,if=floppy

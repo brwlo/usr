@@ -1,0 +1,9 @@
+#!/bin/bash
+
+dims=$(video-dimensions $1)
+width=$(echo $dims|cut -dx -f1)
+height=$(echo $dims|cut -dx -f2)
+
+ffmpeg -y -i $1 -i $2 -filter_complex \
+	[0]overlay=x=${4:-0}:y=${3:-$height}[out] -map [out] -map 0:a? \
+${1%.*}.banner.mp4

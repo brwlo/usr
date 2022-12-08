@@ -1,0 +1,25 @@
+#!/bin/bash
+
+[ "$1" = h ] && {
+  echo \
+  "use: banner-make [:(size|bgcolor|font|fontsize|weight) <vals>] <fname> <msg>"
+  exit; }
+
+for a; do
+  case $a in
+  :?*) var=${a/:/}      ; shift ;;
+   ,*) eval $var=${a/,/}; shift ;;
+    *) continue ;;
+  esac
+done
+
+draw="gravity south"
+draw+=" rectangle 0,0 720,200"
+#draw+=" font ${font:-"Consolas"}"
+draw+=" font-size ${fontsize:-50}"
+draw+=" stroke ${stroke:-#ffffff}"
+draw+=" stroke-width ${weight:-4}"
+draw+=" text 1,1 '""${@:2}""'"
+
+convert -size ${size:-720x60} xc:transparent \
+-fill \#${bgcolor:-000000} -draw "$draw" $1

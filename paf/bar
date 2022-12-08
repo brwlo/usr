@@ -1,0 +1,33 @@
+#!/bin/bash
+
+shopt -s lastpipe
+pgrep -alf bar|grep -F "/bash $paf/bar"|grep -v grep|wc -l|read run
+[ "$run" -gt 1 ] && exit
+
+tr="tr -d '\n'"
+sep="│"
+week="D 2ª3ª4ª5ª6ªS "
+
+while sleep .8; do
+
+  w="`date '+%w'`"
+  let w=2*$w
+  w=${week:$w:2}
+  w=`echo $w|tr -d ' '`
+
+  [ -e $var/msg/txt      ]&& { txt="`barmsg :` "    ;fmt+=$txt$sep;}||txt=
+# [ "`batt`" -lt 40      ]&& { msg="low batt"       ;fmt+=$msg$sep;}||msg=
+  [ -e $var/sxhkd/mode2  ]&& { msg="[2]"            ;fmt+=$msg$sep;}||msg=
+  [ "`iwgetid -r`"       ]&& { net="`iwgetid -r`"   ;fmt+=$net$sep;}||net=
+  [ "`timer c`" -gt 0    ]&& { tim="@`timer c`"     ;fmt+=$tim$sep;}||tim=
+  [ "`ts -R`" -gt 0      ]&& { tsk="#`ts :`"        ;fmt+=$tsk$sep;}||tsk=
+# [ "`batt`" -lt 90      ]&& { bat="`batt :``batt`" ;fmt+=$bat$sep;}||bat=
+  [ "`mem2 :`" -gt 4     ]&& { mem="!`mem2`"        ;fmt+=$mem$sep;}||mem=
+  [ "`bright S`" -ne 100 ]&& { lux="*`bright S`"    ;fmt+=$lux$sep;}||lux=
+  [ "`vol S|$tr`" != -   ]&& { vol="`vol S``vol s`" ;fmt+=${vol%%%}$sep;}||vol=
+  dat="`date "+%d/%m,$w %H:%M:%S"`"; fmt+=$dat$sep
+
+  fmt=${fmt%$sep} fmt=${fmt#$sep}
+  xsetroot -name " $fmt"; fmt= bar=
+
+done

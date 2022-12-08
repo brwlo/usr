@@ -1,0 +1,30 @@
+# inputrc
+# note: see '$ man 3 readline'.
+# note: '$ sed -n 1' shows the key-codes used here.
+
+# options
+set colored-completion-prefix  on
+set colored-stats              on
+set completion-ignore-case     on
+set mark-symlinked-directories on
+set match-hidden-files         off
+set show-all-if-ambiguous      on
+
+# vi mode
+set keymap                     vi
+set editing-mode               vi
+set show-mode-in-prompt        on
+set vi-cmd-mode-string         "\1\e[2 q\2"
+#set vi-ins-mode-string         "\1\e[6 q\2"
+set vi-ins-mode-string         "\1\e[4 q\2"
+
+# keymaps
+#"\C-l": clear-screen
+#$if mode=vi
+#TAB: menu-complete          # tab
+#"\e[Z": menu-complete-backward # shift-tab
+#$endif
+$if mode=vi-cmd
+"\ei" : accept-line            # alt-i
+"\C-s": forward-search-history
+$endif

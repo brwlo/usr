@@ -1,0 +1,20 @@
+#!/bin/bash
+
+[ $1 ] && cd `realpath $1` || cd `fd -td|fzf` || exit
+output=`basename \`pwd\``
+[ $2 ] && output=$2
+
+model="$var/ffmpeg/models/rnnoise-models/"
+model+="somnolent-hogwash-2018-09-01/sh.rnnn"
+inputs=`echo ""*mp4|sed 's/ / -i /g'`
+count=`fd mp4$|wc -l`
+minus=`echo $count - 1|bc`
+#music=$mid/mus/background
+music=/mnt/old2/usr/mkt/mid/mus/royalty-free
+bgmus=`fd . $music|shuf|head -n1`
+for i in `seq 0 $minus`
+do streams+="[$i:v][$i:a]"; done
+for i in *mp4; do dur+=`duration $i`+; done
+dur=`echo ${dur%+}|bc -l`
+
+echo ffmpeg -i $inputs -stream_loop -1 -i $bgmus -fflags +genpts "-filter_complex ${streams}concat=n=$count:v=1:a=1[v1][a1];[a1]arnndn=m=$model[a2];[a2]volume=1.5[a3];[$count:a]volume=0.04[m];[a3][m]amix[a4]" -map\ {[v1],[a4]} -to $dur -vcodec libx265 -crf 28 $output.mp4

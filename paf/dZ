@@ -1,0 +1,2 @@
+#!/bin/bash
+for i in {1..9} {A..Z}; do echo $i; done|nl|expand -t 4|dmenu -l 36

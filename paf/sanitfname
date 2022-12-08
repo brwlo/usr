@@ -1,0 +1,4 @@
+#!/bin/bash
+fname="$@"
+echo $fname | grep -o ' ' &&
+mv -b "$fname" ${fname// /_}

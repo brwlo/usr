@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# https://askubuntu.com/questions/4396/how-do-i-mount-a-qcow2-disk-image
+# how to get number of partitions in a qcow2 file
+# why error message in umt?
+
+dir=$2
+vol=$3
+
+partnum () {
+	mount | grep nbd0 | grep $dir | awk '{print $1}'; }
+
+usage  () {
+	echo usage:
+	echo "mount-qcow2 m <dir> <vol> [--read-only]"
+	echo "mount-qcow2 u <dir>"; }
+
+mnt () {
+	sudo modprobe nbd max_part=8
+	sudo qemu-nbd -c /dev/nbd0 $vol;
+	sudo fdisk -l /dev/nbd0 | tail -n3
+	read -p 'partition number: ' part
+	sudo mount /dev/nbd0p$part $dir; }
+
+umt () { # buggy
+	sudo umount $dir
+	sudo qemu-nbd -d $(partnum); }
+
+[[ $1 == m ]]    && mnt
+[[ $1 == u ]]    && umt
+[[ $1 != [mu] ]] && usage

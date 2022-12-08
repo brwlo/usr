@@ -1,0 +1,24 @@
+#!/bin/bash
+
+>/dev/null x \
+  `([ "$TCE" ] && { imagemagick && ffmpeg4-dev && setxkbmap-; })`
+
+case $1 in
+*v*) cap=$var/cap;; *) cap=$dat/cap;;
+esac; t=`t`; file=$cap/$t; mkdir -p $cap
+
+case $1 in # pick list vid kill win def
+:h) echo cap [sLldavktw]
+    echo sel lst lst2clpboard del aud vid killvid txt win;;
+:s) sxiv $cap                                            ;;
+:L) ls -dt $cap/*|head -n1                               ;;
+:l) cap :L|xi                                            ;;
+:e) DISPLAY=:0.0 gimp `cap :L`                           ;;
+:d) mv -t $var/crp `cap :s`                              ;;
+:v) ffmpeg -f x11grab -r 25 -i ${2:-":0.0"} $file.mp4    ;;
+:k) kill `ps|grep x11grab|head -n1|awk '{print $1}'`     ;;
+:t) cap && tesseract -l ${2:-por} `cap :L`               ;;
+:w) win=`xprop -root|grep "_NET_ACTIVE_WINDOW(WINDOW)"`
+   import -window ${win:40} $file.jpg                    ;;
+*) import -window root $file.jpg                         ;;
+esac

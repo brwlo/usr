@@ -1,0 +1,26 @@
+#!/bin/bash
+# add or remove entries to newsboat urls file
+
+urls=$vm/newsboat/urls
+
+
+ytid () { curl $(xclip -o) | grep channel_id | tr ' ' '\n' | grep channel_id | cut -d\" -f2; }
+
+adj () {
+#	ytb="https://www.youtube.com/feeds/videos.xml?channel_id="
+	[[ "$@" =~ .*youtube.*(channel|user)/(.*) ]] &&
+#	echo $ytb${BASH_REMATCH[1]} || echo "$@"
+	ytid "$@" ; }
+
+bkp () {
+	mkdir -p $tm/backups/newsboat/
+	cp $urls $tm/backups/newsboat/urls.$(date- -t); }
+
+add () { [ $1 ] && echo "$(adj "$@")" >> $urls; }
+
+del () {
+	x=$(nl -nrn -s' ' $urls|dmenu -l 10|awk '{print $1}')
+	[ $x ] && sed -i ${x}d $urls; }
+
+[[ $1 == a ]] && add "${@:2}"
+[[ $1 == d ]] && bkp && del

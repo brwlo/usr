@@ -1,0 +1,7 @@
+#!/bin/bash
+case $1 in
+:) fd -Ld1 . $2 -x files {}|sort -gk2;;
+*) rp=`realpath ${1:-.}`; bn=`basename $rp`
+   echo -e "$bn\t`fd -L . $rp|wc -l`"|
+   expand -t 16 ;;
+esac

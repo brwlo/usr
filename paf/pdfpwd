@@ -1,0 +1,6 @@
+#!/bin/bash
+[ $1 = h ] && echo "usage: pdfpwd <pwd list> <files>" && exit
+exec <$1; shift; read owner
+for i in $@; do read pwd
+qpdf --encrypt "$pwd" "$owner" 256 -- "$i" "${i%.*}.pwd.pdf"
+done

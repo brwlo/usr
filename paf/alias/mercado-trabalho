@@ -1,0 +1,8 @@
+#!/bin/bash
+dir=$dat/bmk
+fil=$dir/mercado-trabalho.vmk
+touch $fil
+case $1 in
+  :) shift; e $fil;;
+  *) vmk $fil $@  ;;
+esac

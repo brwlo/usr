@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rehome
+echo $a

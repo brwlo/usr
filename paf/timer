@@ -1,0 +1,36 @@
+#!/bin/bash
+
+shopt -s lastpipe
+bell=$dat/timer/bell t=`hr`
+mpv="mpv --really-quiet --loop $bell"
+sp="          "
+
+(case $1 in
+
+:) [ $3 ]||exit; sleep $2        ;;
+
+@)
+  case $2 in
+    ?:??) h=0$2;; *) h=$2 ;; esac
+  until [ "$h" = `date '+%H:%M'` ]
+    do sleep 15; done              ;;
+
+k)
+  ps -o pgid,args                   |
+  grep -v grep                      |
+  grep -E 'timer.*[:@]'             |
+  cut -d\  -f1,5-|sed "s/ /$sp/"    |
+  sed -E 's/([@:] )([0-9]:)/\10\2/' |
+  sort -nk3|dmenu -l 10 -p timer    |
+  read pgid comm
+  [ "$pgid" ] && kill -- -$pgid
+  pkill bell; exit                 ;;
+
+c) ps -o comm,args                  |
+   grep -v grep                     |
+   grep -E 'timer.*[:@]'            |
+   wc -l; exit ;;
+
+esac &&
+  { vol; vol M; $mpv;} 2>&1 >/dev/null
+) &

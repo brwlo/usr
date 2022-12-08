@@ -1,0 +1,11 @@
+#!/bin/bash
+
+prot=rtsp
+serv=192.168.1.109
+port=8080
+addr="$prot://$serv:$port/h264_ulaw.sdp"
+dir=$mid/sec/cam1; mkdir -p $dir
+tmp=$var/cam/ok; mkdir -p $tmp
+
+[ -d "$dir" ] && timeout -s INT 3610 \
+  ffmpeg -nostdin -f $prot -i $addr -vsync 2 $dir/`t`.mp4

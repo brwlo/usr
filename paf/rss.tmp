@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# rss="$(xclip -o|xurls)" tags="$(dmenu- -p $rss|tr '|' '\t')"
+
+[[ "$rss" =~ youtube.com ]] &&
+	curl "$rss"|grep channel_id|tr ' ' '\n'|grep channel_id|cut -d\" -f2|xclip -i
+rss="$(xclip -o|xurls)"
+
+echo -e "$rss\t$tags" >> $vm/newsboat/urls

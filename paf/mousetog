@@ -1,0 +1,13 @@
+#!/bin/bash
+# mouse-toggle (bw, wA3idWr3)
+
+shopt -s lastpipe
+xinput|grep TouchPad|awk '{print $6}'|sed 's/id=//'|read mouse
+xinput --list-props $mouse|grep -E 'Device (D|E)'|awk '{print $4}'|read state
+
+case $1 in
+:d) xinput --disable $mouse ;;
+:e) xinput --enable  $mouse ;;
+ *) [[ $state == 0 ]] &&
+    xinput --enable $mouse||xinput --disable $mouse ;;
+esac

@@ -1,0 +1,3 @@
+#!/bin/bash
+XDG_DATA_HOME=$var/xdg/data
+prefix xdg-open $@

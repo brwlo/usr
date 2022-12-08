@@ -1,0 +1,6 @@
+#!/bin/bash
+his=$var/dmenu/his
+case $1 in
+  :) eval `<$his awk '!x[$0]++'|tac|dmenu -l 50` ;;
+  *) com=`tail -n1 $his|dmenu`; eval $com ;;
+esac

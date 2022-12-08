@@ -1,0 +1,6 @@
+#!/bin/bash
+x tce-load -i pinentry-curses
+[ "$1" = r ] && rem="rm "$1"" && shift
+[ "$1" = e ] && shift && gpg -o "$1.gpg" -c "$1" 
+[ "$1" = d ] && shift && gpg "$1"
+$rem

@@ -1,0 +1,2 @@
+#!/bin/bash
+[ "`cat "$2"|wc -l`" -gt $1 ] && head -n$1 "$2"|tail -n1

@@ -1,0 +1,2 @@
+#!/bin/bash
+[ -e exe ] || touch exe && chmod +x exe

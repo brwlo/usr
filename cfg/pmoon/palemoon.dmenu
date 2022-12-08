@@ -1,0 +1,21 @@
+#!/bin/bash
+
+p1='user_pref("extensions.bootstrappedAddons", "{\"pentadactyl@addons.palemoon.org\":{\"version\":\"1.3.1\",\"type\":\"extension\",\"descriptor\":\"'
+p3='/extensions/pentadactyl@addons.palemoon.org\",\"multiprocessCompatible\":false,\"active\":true,\"userDisabled\":false,\"appDisabled\":false}}");'
+xpi=$vm/palemoon/pentadactyl/xpi/master/pentadactyl
+proxy=pentadactyl@addons.palemoon.org
+
+[ ! $1 ] && exec palemoon general && exit # segfault
+
+dir=$vm/palemoon/profiles; cd $dir
+choice="$(ls -1|dmenu- -p 'pm: ')"
+if [ -d "$choice" ]; then cd - && palemoon $choice
+elif [ -n "$choice" ]; then
+  mkdir -p $choice/extensions; echo $xpi > $choice/extensions/$proxy
+  /usr/bin/palemoon --no-remote -headless -profile $choice & pid=$!; sleep 8; kill $pid
+  echo -e "$p1${choice}/extensions/${proxy}$p3" >> $choice/user.js
+  sed -i -E \
+		's/userDisabled":true/userDisabled":false/;s/active":false/active":true/' \
+		$choice/extensions.json
+	palemoon $choice
+fi

@@ -1,0 +1,105 @@
+"settings
+
+ colo colors1
+ hi MOW -a margin-bottom: 1em;
+ sty -n chrome chrome* [id*=status4evar] {display: none !important;}
+
+ se stal=never
+
+ se! browser.startup.homepage=tinyurl.com/ooudura
+
+ se ht+=summary
+ se ht+=.soundItem
+ se ht+=[class*=aba],[class*=Aba],[class*=ABA]
+ se ht+=[class*=rrow]
+ se ht+=[class*=tn]
+ se ht+=[class*=utton]
+ se ht+=[class*=otao]
+ se ht+=[class*=aret]
+ se ht+=[class*=heckbox]
+ se ht+=[class*=lose]
+ se ht+=[class*=ollaps]
+ se ht+=[class*=con]
+ se ht+=[class*=mg]
+ se ht+=[class*=mage]
+ se ht+=[class*=enu]
+ se ht+=[class*=enu]>li
+ se ht+=[class*=ext]
+ se ht+=[class*=ost]
+ se ht+=[class*=elec]
+ se ht+=[class*=lide]
+ se ht+=[class*=rint]
+ se ht+=[class*=witch]
+ se ht+=[class*=weet]
+ se ht+=[class*=homp]
+ se ht+=[class*=bt]
+ se ht+=[class*=ufi],[class*=UFI]
+ se ht+=[id*=imprimir]
+ se ht+=[id*=lose]
+ se ht+=[id*=lide]
+ se ht+=[name*=elec]
+ se ht+=[name*=adio]
+ se ht+=[style*=ackground]
+
+"styles
+
+ ".chrome
+
+  gr! sty-chrome | gr sty-chrome
+
+  sty -n view-source view-source:* * {background: black; color: white;}
+  sty -n view-source -a view-source:* span {white-space: pre-wrap; word-wrap: break-word;}
+  sty -n view-source -a view-source:* [color:black] {color: white !important;}
+  sty -n view-source -a view-source:* .attribute-name {color: white !important;}
+ 
+  "manipulation
+  sty -n images.hide http*,about:* img {visibility: hidden !important;}
+  sty -n images.remove http*,about:* img {display: none !important;}
+  sty -n margin.reduce http* body {padding: 0 10em !important;}
+
+  styd! -g sty-chrome
+  stye -g sty-chrome -n view-source
+
+"mappings
+
+ com! mapn -nargs * map -m n <args>
+
+ "base/main
+ mapn e	<cr>
+ mapn <c-v>	<pass>
+ mapn <c-z>	<pass>
+
+ "normal
+
+ mapn <l> s
+
+ mapn <l>c	<esc><esc><esc>i<esc><esc><esc>i<esc>i
+ mapn <l>i	<c-v>
+ mapn <l>I	<c-z>
+ mapn <l>s	-ex stop
+ mapn <l>j	-ex ju
+ mapn <l>n	-ex ec document.title
+ mapn <l>U	-j undoCloseWindow()
+
+ mapn Q	-ex reg <arg>
+ mapn ç	:
+ mapn c	b
+ mapn C	B
+ mapn gm	-ex mes
+ mapn gM	:em 
+ mapn gr	-ex reloada
+ mapn gR	-ex reloada!
+ mapn x	d
+ mapn X	D
+ mapn gx	:bd! 
+
+ mapn a	<c-^>
+ mapn ,	<c-p>
+ mapn l	<c-n>
+ mapn g,  g0
+ mapn gl  g$
+
+ mapn <a-,>	<left>
+ mapn <a-j>	<down>
+ mapn <a-k>	<up>
+ mapn <a-l>	<right>

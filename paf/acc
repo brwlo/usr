@@ -1,0 +1,39 @@
+#!/bin/bash
+
+shopt -s lastpipe
+
+aid="read tab separated file.\n"
+aid+="col4 is pos. col3 is neg.\n"
+aid+="usage: acc [m[anp]|A|L|e] [<file.tree>]"
+[ "$1" = h ] && { echo -e "$aid"; exit; }
+
+[ "$2" ] && {
+grep "	" $2|grep -vE "[^.0-9	]+"|cut -f2|
+  xargs|sed 's/ /+/g'|bc -l|read fut
+grep "	" $2|grep -vE "[^.0-9	]+"|cut -f3|
+  xargs|sed 's/ /+/g'|bc -l|read neg
+grep "	" $2|grep -vE "[^.0-9	]+"|cut -f4|
+  xargs|sed 's/ /+/g'|bc -l|read pos
+} 2>/dev/null
+neg=${neg:-0} pos=${pos:-0} fut=${fut:-0}
+
+src=${src:-.} # use env
+
+case $1 in # multi all neg pos
+m?) fd -tf -tl -d1 $src $fin/acc|xargs -n1 acc ${1:1}|
+    cut -d= -f2|xargs|sed 's/ /+/g'|bc -l                ;;
+:A) cd $fin/acc; fd -d1 $src -x sh -c \
+    'echo -e "{/.}\t`acc a {}|cut -d= -f2`"'; acc        ;;
+ A) acc :A | sed 's/conta-//'|sort|expand -t 24          ;;
+ F) echo "$pos-($neg+$fut)=`echo $pos-$neg-$fut|bc -l`"  ;;
+:*) cd $fin/acc; fd $src|dmenu|xargs acc ${1:1}          ;;
+ e) cd $fin/acc; fd $src|dmenu|read f; [ -e "$f" ]&& e $f;;
+ a) echo "$pos-($neg)=`echo $pos-$neg|bc`"               ;;
+ n) echo $neg                                            ;;
+ p) echo $pos                                            ;;
+ f) echo $fut                                            ;;
+ T) grep -iEA1 "$3" $2|grep -v \\-\\-|sed 's/\t//'       ;;
+#t) acc T $2 "$3"|acc a -                                ;;
+ t) acc T $2 "(fundo.*)*$3(.*fundo)*"                    ;;
+ *) acc ma                                               ;;
+esac

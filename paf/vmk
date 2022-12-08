@@ -1,0 +1,32 @@
+#!/bin/bash
+
+head=`head -n1 $1`
+for i in $head; do
+  vars+="${i%:*} "
+  eval ${i%:*}=${i##*:}
+done
+shopt -s lastpipe
+echo $vars|sed 's/ /\n/g'|wc -L|read tab
+let tab++
+
+[ "$3" ] && rgx="[$3]" || rgx=.
+fro 3 $1|while read line; do
+  [ "$line" = "" ] && let j++
+  printf "%03d   %s\n" "$j" "$line"
+done|
+  grep -E "^[0-9]+ +.$rgx"|
+  dmenu -l 25|cut -d\  -f1|read id
+
+fro 3 $1|while read line; do
+  [ "$line" = "" ] && let k++
+  printf "%03d   %s\n" "$k" "$line"
+done|grep "^$id"|cut -d\  -f2-|
+while read key val; do
+  [ "$key" ] && echo -e "${!key%:*}:\t$val"
+done|
+case $2 in
+:f) grep -E '(data|ext):'|cut -f2-|tr '\n' .|sed 's/.$//';;
+#:g) cat -|grep ${u}|awk '{print $2}';;
+ :) cat -|expand -t $tab;;
+ *) cat -|expand -t $tab;;
+esac

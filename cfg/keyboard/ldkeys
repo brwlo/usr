@@ -1,0 +1,11 @@
+#!/bin/bash
+# for first time setup or fixing issues with loadkeys and remaps.map
+
+loadkeys=`prefix : loadkeys`
+sudo -E -- [ "$TCE" ] && groupadd="addgroup -S" || groupadd=groupadd
+sudo -E -- [ "$TCE" ] && usermod="adduser -G"   || usermod="usermod -a -G"
+sudo -E -- $groupadd bwldkeys
+sudo -E -- $usermod bwldkeys `whoami`
+sudo -E -- chgrp bwldkeys $loadkeys
+sudo -E -- chmod 4750 $loadkeys
+$loadkeys $cfg/keyboard/remaps.map

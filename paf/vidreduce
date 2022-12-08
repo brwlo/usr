@@ -1,0 +1,2 @@
+#!/bin/bash
+ffmpeg -i $1 -fflags +genpts -vcodec libx265 -preset ultrafast -crf ${2:-28} $1.mp4

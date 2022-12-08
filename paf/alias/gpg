@@ -1,0 +1,3 @@
+#!/bin/bash
+home=$HOME HOME=$dat/gpg; mkdir -p $HOME
+prefix gpg $@

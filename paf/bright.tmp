@@ -1,0 +1,16 @@
+#!/bin/bash
+
+shopt -s lastpipe
+dir=/sys/class/backlight/intel_backlight
+now=`cat $dir/brightness`
+max=937
+mid=468
+min=10
+
+case $1 in
+  S) expr 100 \* $now / $max  ;;
+  s) echo `bri2 :s`%|read now ;;
+  u) steps + $now|read now    ;;
+  d) steps - $now|read now    ;;
+  h) expr $now
+esac

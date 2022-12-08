@@ -1,0 +1,10 @@
+#!/bin/bash
+
+db=mpv.list
+
+[ ! -e $db ] &&
+  prev=0 || prev=`tail -n1 $db`
+curr=$1
+
+rest=`echo $curr-$prev|bc`
+printf "%s\n%s" $rest >> $db

@@ -1,0 +1,10 @@
+#!/bin/bash
+x `( [ "$TCE" ] && x tce-load -i task-spooler )`
+dir=$var/ts; mkdir -p $dir
+export TS_ONFINISH="mpv $dat/timer/bell"
+export TS_SAVELIST=$dir/list
+export TMPDIR=$dir
+case $1 in
+:) prefix ts|fro 2|grep -v finished|wc -l ;;
+*) prefix ts $@ ;;
+esac

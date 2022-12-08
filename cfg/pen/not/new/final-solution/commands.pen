@@ -1,0 +1,48 @@
+" commands.pen
+
+  gr! comms | gr comms
+
+  com! Base,B -bang -nargs * -d 'Convert to base b < 63.' -j
+  \var A = ('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ').split('')
+  \var N='', B = (args[0] < 63 ? args[0] : 10);
+  \for (var i=args.length-1; i>0 ; i--) {
+  \	var Q = Math.floor(Math.abs(args[i])), R;
+  \	do { R = Q%B; N = A[R]+N; Q = (Q-R)/B; } while (Q > 0); }
+  \prefs.set('bw.base',N);
+  \commands.execute('echom "' + prefs.get('bw.base') + '"');
+
+  com! Time,T -d 'Timestamp' -bang -nargs * -j
+  \var myDate  = new Date();
+  \var DateStr = myDate.toString().split(' ');
+  \var Year    = DateStr[3]
+  \var Day     = DateStr[2];
+  \var Month   = ('0' + (myDate.getMonth() + 1)).slice(-2);
+  \var Time    = DateStr[4].split(':');
+  \var Week    = myDate.getDay() + 1;
+  \var TStamp  = Year + Month + Day + Time.join('') + Week;
+  \commands.execute('sil Base 62 '+Year+' '+Month+' '+Day+' '+Time.join(' '));
+  \prefs.set('bw.ts',TStamp); prefs.set('bw.ts62',prefs.get('bw.base'));
+  \commands.execute('echom "'+prefs.get('bw.ts62')+', '+prefs.get('bw.ts')+'"');
+  \if (bang) {
+  \ prefs.set('bw.ts.save',prefs.get('bw.ts'));
+  \ prefs.set('bw.ts62.save',prefs.get('bw.ts62')); }
+
+  com! Restart,Rs -nargs 0 restart ++cmd 'se rtp=$cm/pen/ | lpl (js|pen)$'
+  com! Rehash,Rh -nargs 0 rehash ++cmd 'se rtp=$mSYS/pen/ | lpl (js|pen)$'
+
+  com! Split,S -nargs * -bang -complete url -j
+  \var tab = (!bang ? 'New' : 'Duplicate')
+  \var moves = { h: 'Left', j: 'Below', k: 'Above', l: 'Right',
+  \ move: (e) => { for (i in moves) { if (i==e) return moves[i] }} }
+  \commands.execute('em Tile.Tile ' + tab + ' Tab.' + moves.move(args[0]))
+  \if (!bang) commands.execute('Xo ' + args.slice(1).join(' '))
+
+  com! Xopen,Xo -nargs * -complete url -j commands.execute('o ' + args);
+  com! Xtabo,Xt -nargs * -complete url -j commands.execute('t ' + args);
+  com! Xback,Xx -nargs * -complete url -j commands.execute('t! ' + args);
+  com! Xwind,Xw -nargs * -complete url -j commands.execute('wopen '+ args);
+
+  com! YtPlay o javascript:(function() {content.document.getElementById('movie_player').playVideo()})()
+  com! YtPause o javascript:(function() {content.document.getElementById('movie_player').pauseVideo()})()
+  com! YtStop o javascript:(function() {content.document.getElementById('movie_player').stopVideo()})()
+  com! YtSeek -nargs=1 o javascript:(function() {vid=content.document.getElementById('movie_player');vid.seekTo(vid.getCurrentTime()+(<args>),true)})()

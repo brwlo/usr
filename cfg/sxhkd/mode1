@@ -1,0 +1,68 @@
+super + e
+  $cfg/sxhkd/setmode 2
+
+super + r
+  setxkbmap-; mousetog :d; timefix & pkill sxhkd && x sxhkd &
+
+super + shift + r
+  pkill dwm && x dwm &
+
+super + comma
+  $term
+
+super + semicolon
+  $term -e lf
+
+super + shift + d
+  dmenurep :
+
+super + {v, shift + v}
+  vol {d,u}
+
+super + {y, shift + y}
+  cap {_,:w}
+
+super + x
+  mousetog :d; pkill unclutter; xmouseless && x unclutter --timeout .1
+
+super + shift + b
+  <$dat/menu/menu dm|sh
+
+super + shift + l
+  lnk
+
+super + shift + m
+  mus
+
+super + shift + x
+  xe
+
+super + shift + t
+  timer k
+
+super + g
+  acc A|dmenu -l 50 -p acc
+
+super + shift + g
+  $term -e acc e
+
+super + p
+  tasks s
+
+super + shift + p
+  tasks S
+
+super + shift + f
+  mktctrl :m
+
+super + w
+  wv2
+
+super + shift + w
+  wv2 :n
+
+super + o
+  tmp
+
+super + shift + o
+  tmp :

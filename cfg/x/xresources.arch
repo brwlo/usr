@@ -1,0 +1,11 @@
+!!gui
+
+URxvt.saveLines:  8192
+urxvt.scrollBar:	false
+
+urxvt.background:	black
+urxvt.foreground:	white
+
+Xft.dpi: 118
+Urxvt.fontSize: 14
+URxvt.font: xft:Droid Sans Mono:size=8:antialias=true

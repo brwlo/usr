@@ -1,0 +1,13 @@
+#!/bin/bash
+>/dev/null x `( [ "$TCE" ] && x ntfs-3g && x ntfsprogs )`
+exec <$dat/dir/vol.tsv; read head
+while IFS=$'\t' read vol bool uuid opts; do
+  [ "$bool" = n ] && continue
+  [ "$opts" = . ] && opts=${opts//.}
+  labl=$mnt/$vol; mkdir -p $labl
+  sudo mount $opts -U $uuid $labl 2>/dev/null
+  shopt -s nullglob
+  for i in $labl/usr/*; do 
+    [ -e "$labl/$i" ] || ln -st $usr $i
+  done 2>/dev/null
+done

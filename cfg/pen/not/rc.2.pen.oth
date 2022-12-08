@@ -1,0 +1,934 @@
+" rc.pen (wybuhEV, bw)
+
+"first
+
+  delgr plugin-rc
+
+"commands
+
+  gr! comms | gr comms
+
+ ".regular
+
+  com! Base,B -bang -nargs * -d 'Convert to base b < 63.' -j
+  \var A = ('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ').split('')
+  \var N='', B = (args[0] < 63 ? args[0] : 10);
+  \for (var i=args.length-1; i>0 ; i--) {
+  \	var Q = Math.floor(Math.abs(args[i])), R;
+  \	do { R = Q%B; N = A[R]+N; Q = (Q-R)/B; } while (Q > 0); }
+  \prefs.set('bw.base',N);
+  \commands.execute('echom "' + prefs.get('bw.base') + '"');
+
+  com! Time,T -d 'Timestamp' -bang -nargs * -j
+  \var myDate  = new Date();
+  \var DateStr = myDate.toString().split(' ');
+  \var Year    = DateStr[3]
+  \var Day     = DateStr[2];
+  \var Month   = ('0' + (myDate.getMonth() + 1)).slice(-2);
+  \var Time    = DateStr[4].split(':');
+  \var Week    = myDate.getDay() + 1;
+  \var TStamp  = Year + Month + Day + Time.join('') + Week;
+  \commands.execute('sil Base 62 '+Year+' '+Month+' '+Day+' '+Time.join(' '));
+  \prefs.set('bw.ts',TStamp); prefs.set('bw.ts62',prefs.get('bw.base'));
+  \commands.execute('echom "'+prefs.get('bw.ts62')+', '+prefs.get('bw.ts')+'"');
+  \if (bang) {
+  \ prefs.set('bw.ts.save',prefs.get('bw.ts'));
+  \ prefs.set('bw.ts62.save',prefs.get('bw.ts62')); }
+
+  com! SeeOpts,Se -bang -nargs 1 -d 'Echo config options.' -j
+	\ commands.execute('echo "'+prefs.get(args[0])+'"');
+
+  com! MultiMap,Map -nargs * -d 'Map multiple keys.' -j
+  \var opt=args[0]+' ', rhs=args[1].split('.'), lhs1=args[2], lhs2=args[3].split('.');
+  \for (var i=0; i<rhs.length; i++) {
+  \ commands.execute('map ' + opt + rhs[i] + ' ' + lhs1 + lhs2[i]) }
+
+  com! Note,N -nargs * -j
+  \commands.execute('sil B');
+  \commands.execute('sil !echo "#'+prefs.get('bw.ts62')+
+  \ ' PEN '+args[0]+"' "+args[1]+'\'" >> $mARQ/wyar0LL-notes/+nt');
+
+  com! R -nargs * !R -q -e "<args>"
+
+  com! Restart,Rs -nargs 0 restart ++cmd 'se rtp=$cm/pen/ | lpl (js|pen)$'
+  com! Rehash,Rh -nargs 0 rehash ++cmd 'se rtp=$mSYS/pen/ | lpl (js|pen)$'
+
+  com! SaveMus,Sm -bang -nargs * -d 'Bang: vid' -j
+  \commands.execute('!youtube-dl '+(bang?'':'-x')+' -o '+prefs.get("bw.d.dwn")+args+'.%(ext)s" "'+buffer.URL+'"');
+
+  com! Split,S -nargs * -bang -complete url -j
+  \var tab = (!bang ? 'New' : 'Duplicate')
+  \var moves = { h: 'Left', j: 'Below', k: 'Above', l: 'Right',
+  \ move: (e) => { for (i in moves) { if (i==e) return moves[i] }} }
+  \commands.execute('em Tile.Tile ' + tab + ' Tab.' + moves.move(args[0]))
+  \if (!bang) commands.execute('Xo ' + args.slice(1).join(' '))
+
+  com! Xopen,Xo -nargs * -complete url -j commands.execute('o ' + args);
+  com! Xtabo,Xt -nargs * -complete url -j commands.execute('t ' + args);
+  com! Xback,Xx -nargs * -complete url -j commands.execute('t! ' + args);
+  com! Xwind,Xw -nargs * -complete url -j commands.execute('wopen '+ args);
+
+  com! YtPlay o javascript:(function() {content.document.getElementById('movie_player').playVideo()})()
+  com! YtPause o javascript:(function() {content.document.getElementById('movie_player').pauseVideo()})()
+  com! YtStop o javascript:(function() {content.document.getElementById('movie_player').stopVideo()})()
+  com! YtSeek -nargs=1 o javascript:(function() {vid=content.document.getElementById('movie_player');vid.seekTo(vid.getCurrentTime()+(<args>),true)})()
+
+ "bmarking
+
+" bmarks file set (bmfs)
+" (set a default file to imp/export bmarks)
+  com! bmfs -nargs ? -bang -complete file -j
+  \ dflt=prefs.get('bw.bmk.general')
+  \ var choice=(args.length==0 ? prefs.get('bw.bmk.cur') : args[0])
+  \ bang ? prefs.set('bw.bmk.cur',dflt)
+  \			 : prefs.set('bw.bmk.cur',choice);
+  \ commands.execute('echo "'+prefs.get('bw.bmk.cur')+'"')
+
+" bms: bmark save
+" (saves bmark into JSON preference bw.bms)
+com! bms -nargs * -j
+\ commands.execute('Time')
+\ bmn=prefs.get('bw.ts62')
+\ len=args.length
+\ if (len<15 && len%2==0) {
+\  for (var i=0;i<len;i++) {
+\   if (i%2==0 && /-[ucikpTt]/.test(args[i])) {
+\    bmk[args[i][1]]=args[i+1]
+\ }}} else { commands.execute('echo \"bmw: wrong!\"') }
+\ if (!prefs.get('bw.bms')) prefs.set('bw.bms','{}');
+\ bms=JSON.parse(prefs.get('bw.bms')); bms[bmn]=bmk
+\ prefs.set('bw.bms',JSON.stringify(bms))
+\ bmo=args.toString().replace(/-u /,'')
+\ commands.execute('bmark '+bmo)
+
+" bml: bmarks load - (im/ex)port
+" (im/export bw.bms preference as JSON)
+
+" others: /home/bw/u/w/pen-bmarks
+
+ ".extended hints
+
+  js hints.addMode('e', 'alt hints (o)', e=>buffer.followLink(e,dactyl.CURRENT_TAB));
+  js hints.addMode('E', 'alt hints (t)', e=>buffer.followLink(e,dactyl.NEW_TAB));
+
+  js hints.addMode('k', 'reverse img (o)', e=>{commands.execute('Xo k '+e.src)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('K', 'reverse img (t)', e=>{commands.execute('Xt k '+e.src)}, node=>{if (node !== -1) return true; return false})
+
+  js hints.addMode('p', 'google cache (o)', e=>{commands.execute('Xo p '+e)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('P', 'google cache (t)', e=>{commands.execute('Xt p '+e)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('q', 'wayback (o)',      e=>{commands.execute('Xo q '+e)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('Q', 'wayback (t)',      e=>{commands.execute('Xt q '+e)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('r', 'archive.is (o)',   e=>{commands.execute('Xo r '+e)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('R', 'archive.is (t)',   e=>{commands.execute('Xt r '+e)}, node=>{if (node !== -1) return true; return false})
+
+  js hints.addMode('u', 'search site (o)', e=>{CommandExMode().open('Xo u '+e.host)}, node=>{if (node !== -1) return true; return false})
+  js hints.addMode('U', 'search site (t)', e=>{CommandExMode().open('Xt u '+e.host)}, node=>{if (node !== -1) return true; return false})
+
+  js hints.addMode('x', 'getTitle', e => commands.execute(
+  \"!sleep 3; curl -s '" + e + "' " + "|grep -i '<title>' "), node => {if (node !==-1) return true; return false} )
+  js hints.addMode('z', 'expand url (o)', e=>{commands.execute('Xo z '+e)}, function(node){if (node !== -1) return true; return false})
+  js hints.addMode('Z', 'expand url (t)', e=>{commands.execute('Xt z '+e)}, function(node){if (node !== -1) return true; return false})
+
+ ".modes
+
+  "main > video (vid)
+  js if (!modes.VIDEO) {
+  \modes.addMode('VIDEO',
+  \ {char: 'vid',
+  \  description: 'bw: manipulate youtube videos.',
+  \  bases: [modes.MAIN]},
+  \  "")}
+
+  "normal > dictionaries
+  js if (!modes.DICTS) {
+  \modes.addMode('DICTS',
+  \ {char: 'dic',
+  \  description: 'bw: dictionary handler.',
+  \  bases: [modes.NORMAL]},
+  \ "")}
+
+"config
+
+  gr! config | gr config
+  sil Time!
+
+ ".general
+
+  if /win/i.test(window.navigator.platform)
+  se! bw.d.root='i:\\ib\\'
+  el
+  se! bw.d.root='/home/bw/i/ib/'
+  fi
+
+  exe 'se! bw.d.dwn='     + prefs.get('bw.d.root') + 'var/dwn/'
+  exe 'se! bw.d.pen.rtp=' + prefs.get('bw.d.root') + 'sys/pen/'
+  exe 'se! bw.d.pen.reg=' + prefs.get('bw.d.root') + 'sys/pen/reg/'
+  exe 'se! bw.d.pen.var=' + prefs.get('bw.d.root') + 'var/pm/pen/'
+
+  if /^...-/i.test(prefs.get('bw.profile'))
+  exe 'se! bw.profile.type=' + /^.../.exec(prefs.get('bw.profile'))
+  el
+  se! bw.profile.type='gen'
+  fi
+
+  if /win/i.test(window.navigator.platform)
+  exe 'se! bw.pen.cache=' + prefs.get('bw.d.root') + 'var\pm\profiles' + prefs.get('bw.profile') + 'dactyl\cache.zip'
+" Is this necessary anymore?
+  el
+  js storage.infoPath._path=prefs.get('bw.d.pen.var')+'info/'+prefs.get('bw.profile')
+  fi
+
+  js editor.defaultRegister='*+'
+
+  colo colors1
+  hi MOW -a margin-bottom: 1em;
+  sty -n chrome chrome* [id*=status4evar] {display: none !important;}
+
+  exe 'sil cd ' + prefs.get('bw.d.root')
+
+ ".settings
+
+  se banghist
+  se hlfind
+  se more
+  se noincfind
+  se notimeout
+
+  se maxitems=25
+  se messages=100
+
+  se autocomplete=!/ex/(se|js),.*
+  se complete=bookmark,history,suggestion,file,search
+  se downloadsort=+date
+  se editor='xterm -cr yellow -fg green -bg black -e "nvim --cmd \"set rtp^=$mSYS\/vim\/ sd+=\"n~$mVAR\/vim\/_shada\"\" \"$@\" +<line> +\"sil! call cursor(0, <column>)\" <file>"'
+  se guioptions=sC
+  se hintmatching+=transliterated
+" se iskeyword+= BROKEN?
+  se showtabline=never
+  se suggestengines=duckduckgo
+
+  exe 'se runtimepath=' + prefs.get('bw.d.pen.rtp')
+  exe 'se titlestring=<' + prefs.get('bw.profile') + '>'
+
+ ".hints
+
+  se previouspattern=Prévia,Anterior,'Mais [Aa]ntig'
+  se nextpattern=Próxim,Seguinte,'Mais [Nn]ov'
+
+  se ht+=summary
+  se ht+=.soundItem
+	se ht+=[class*=aba],[class*=Aba],[class*=ABA]
+  se ht+=[class*=rrow]
+  se ht+=[class*=tn]
+  se ht+=[class*=utton]
+  se ht+=[class*=otao]
+  se ht+=[class*=aret]
+  se ht+=[class*=heckbox]
+  se ht+=[class*=lose]
+  se ht+=[class*=ollaps]
+  se ht+=[class*=con]
+  se ht+=[class*=mg]
+  se ht+=[class*=mage]
+  se ht+=[class*=enu]
+  se ht+=[class*=enu]>li
+  se ht+=[class*=ext]
+  se ht+=[class*=ost]
+  se ht+=[class*=elec]
+  se ht+=[class*=lide]
+  se ht+=[class*=rint]
+  se ht+=[class*=witch]
+  se ht+=[class*=weet]
+  se ht+=[class*=homp]
+  se ht+=[class*=bt]
+  se ht+=[class*=ufi],[class*=UFI]
+  se ht+=[id*=imprimir]
+  se ht+=[id*=lose]
+  se ht+=[id*=lide]
+  se ht+=[name*=elec]
+  se ht+=[name*=adio]
+  se ht+=[style*=ackground]
+
+  se eht+=[F]:.js-last-tabstop
+  se eht+=[iIkK]:img,[style*=background-image]
+  se eht+=[eE]:a.close,img,[class*=weet],[role=article],[rel],[style*=small],[class*=uix-button],[class*=caret]
+
+ ".sanitation
+
+  se si+=cache
+" se si+=commandline
+  se si+=cookies
+" se si+=downloads
+" se si+=formdata
+" se si+=history
+" se si+=host
+" se si+=marks
+  se si+=messages
+" se si+=offlineapps
+  se si+=options
+  se si+=passwords
+  se si+=registers
+  se si+=sessions
+  se si+=sitesettings
+
+  se ss=cache
+" se ss+=commandline
+" se ss+=cookies
+" se ss+=downloads
+" se ss+=formdata
+" se ss+=history
+" se ss+=marks
+" se ss+=offlineapps
+" se ss+=passwords
+" se ss+=registers
+" se ss+=sessions
+" se ss+=sitesettings
+
+"prefs
+
+  gr! prefs | gr prefs
+
+ ".important
+
+  se! browser.startup.homepage=tinyurl.com/ooudura
+
+  "cache
+" <wiki.archlinux.org/index.php/Firefox/Tweaks#Turn_off_the_disk_cache>
+" <https://wiki.archlinux.org/index.php/Firefox/Profile_on_RAM>
+  se! browser.cache.disk.enable=false
+
+  "downloads
+  exe 'se! browser.download.dir=' + prefs.get('bw.d.dwn')
+  exe 'se! browser.download.downloadDir=' + prefs.get('bw.d.dwn')
+  exe 'se! browser.download.lastDir=' + prefs.get('bw.d.dwn')
+  se! browser.download.folderList=2
+  se! browser.download.useDownloadDir=true
+
+  "media
+  se! accessibility.blockautorefresh=false
+  se! browser.sessionstore.max_tabs_undo=1000
+  se! javascript.enabled=true
+  se! media.autoplay.allowscripted=false
+  se! media.autoplay.enabled=false
+  se! media.block-autoplay-until-in-foreground=true
+  se! media.block-play-until-visible=true
+
+  "privacy
+  se! geo.enabled=false
+
+ ".scheduled
+
+  if (prefs.get('bw.ts').substring(6,8) == 01 &&
+  \   prefs.get('bw.updates.prefs.month') < 1)
+  \  || prefs.get('bw.updates.prefs.applied') !='yes'
+
+  se! bw.updates.prefs.month+=1
+  se! bw.updates.prefs.applied='yes'
+
+  "general
+  se! browser.cache.disk.smart_size.first_run=false
+  se! browser.cache.disk.smart_size_cached_value=307200
+  se! browser.cache.memory.capacity=51200
+  se! browser.display.standalone_images.background_color=black;
+  se! browser.link.open_newwindow.restriction=0
+  se! browser.search.openintab=true
+  se! browser.sessionstore.max_tabs_undo=50
+  se! browser.sessionstore.max_windows_undo=10
+  se! browser.startup.page=3
+  se! browser.tabs.animate=false
+  se! browser.tabs.closeWindowWithLastTab=false
+  se! browser.tabs.insertRelatedAfterCurrent=true
+  se! browser.tabs.warnOnClose=false
+  se! browser.tabs.warnOnCloseOtherTabs=false
+  se! browser.tabs.warnOnOpen=false
+  se! browser.urlbar.maxRichResults=50
+  se! general.useragent.locale=en-US
+  se! javascript.options.mem.gc_incremental_slice_ms=20
+  se! pdfjs.disabled=true
+
+  "security
+  se! dom.disable_window_open_feature.menubar=true
+  se! dom.disable_window_open_feature.personalbar=true
+  se! dom.disable_window_open_feature.scrollbars=true
+  se! dom.disable_window_open_feature.titlebar=true
+  se! dom.disable_window_open_feature.toolbar=true
+  se! dom.event.contextmenu.enabled=false
+  se! security.xpconnect.plugin.unrestricted=false
+
+  "punycode
+  se! browser.identity.display_punycode=2
+  se! network.IDN_show_punycode=true
+
+  "privacy
+  se! browser.cache.disk_cache_ssl=false
+  se! privacy.donottrackheader.enabled=true
+
+  elif prefs.get('bw.ts').substring(6,8) != 01
+  se! bw.updates.prefs.month&
+
+  fi
+
+"autocommands !
+
+  gr! au | gr au
+
+  au PageLoadPre (txt|js|vim|vmp|pen.*|nt|note)$ setl enc=UTF-8
+  au PageLoadPre http(s)?://twitter.com* exe 'o ' + buffer.doc.URL.replace(/twitter/,'mobile.twitter')
+
+" au PageLoad duckduckgo.com* norm! gi<c-t>0d$<c-[>
+
+  if /lin/i.test(window.navigator.platform)
+" Many problems here.
+  au BookmarkAdd,BookmarkChange .* -js 
+  \ if (!/src/.test(tags)) {
+  \commands.execute(
+  \ 'sil !echo "bma'+
+  \ (tags.length > 0 ? ' -T \\"'+tags+'\\"' : '')+
+  \ (title.length > 0 ? ' -t \\"'+title+'\\"' : '')+
+  \ ' '+url+'"'+' >> '+
+  \ prefs.get('bw.d.pen.reg')+prefs.get('bw.profile.type')+'.pen')}
+  au BookmarkRemove .* -js 
+  \commands.execute('!echo "delbm'+' '+url+'"'+' >> '+
+  \prefs.get('bw.d.pen.reg')+prefs.get('bw.profile.type')+'.pen')
+" au Enter .* -js 
+" \commands.execute(
+" \ 'sil !cat "'+prefs.get('bw.d.pen.reg')+prefs.get('bw.profile.type')+'.pen"'+
+" \ ' | uniq > '+prefs.get('bw.d.pen.reg')+prefs.get('bw.profile.type')+'.pen2')
+  fi
+  au! BookmarkAdd,BookmarkChange
+
+  "fixes
+  if /win/i.test(window.navigator.platform)
+  au Leave .* exe '!@echo off && del /Q /F "' + prefs.get('bw.pen.cache') + '"'
+" Is this necessary anymore?
+  fi
+
+" prevents installation of valence and ADBHelper?
+" https://forum.palemoon.org/viewtopic.php?t=18681
+  se! devtools.webide.enabled=false
+  se! devtools.webide.autoinstallADBHelper=false
+  se! devtools.webide.autoinstallFxdtAdapters=false
+  se! devtools.webide.autoConnectRuntime=false
+
+"marks
+
+  gr! marks | gr marks
+
+ ".bmarks
+
+  js services.browserSearch.getEngines().forEach(function(e) e.hidden=true)
+  sil bmark -T src -k s -t 'src: ddg' ddg.gg/?q=%s
+  se defsearch=s
+
+ ".qmarks
+
+  sil qma A	~/i/ib/arq/
+  sil qma M	~/i/ib/mid/
+  sil qma S	~/i/ib/sys/
+  sil qma T	~/i/ib/tmp/
+  sil qma V	~/i/ib/var/
+  sil qma D	~/i/ib/var/dwn/
+  sil qma Y	~/i/ib/var/screens/
+
+  sil exe 'qma H ' + prefs.get('browser.startup.homepage')
+
+  "sites
+  sil qma B youtube.com/channel/UCq1COd1BN71rEAyvSM4OIow
+  sil qma E outlook.live.com
+  sil qma F ativainvestimentos.com.br
+  sil qma J projudi.tjpr.jus.br
+  sil qma U tads.ufpr.br
+  sil qma V sept.ufpr.br
+  sil qma W web.whatsapp.com
+
+ ".scheduled
+
+  if (prefs.get('bw.ts').substring(6,8)==01 &&
+  \   prefs.get('bw.updates.marks.month')<1)
+  \  || prefs.get('bw.updates.marks.applied')!='yes'
+
+  se! bw.updates.marks.month+=1
+  se! bw.updates.marks.applied='yes'
+
+  sil bmark -T src -k r -t 'src: ddg, region' ddg.gg/?q=r:%s
+  sil bmark -T src -k u -t 'src: ddg, site' ddg.gg/?q=site:%s
+
+  sil bmark -T src -k p -t 'arq: gcache' ddg.gg/?q=!cache%20%s
+  sil bmark -T src -k q -t 'arq: wayback' ddg.gg/?q=!wayback%20%s
+  sil bmark -T src -k r -t 'arq: archiveis' ddg.gg/?q=!archiveis%20%s
+  sil bmark -T src -k z -t 'sec: bigurl' urlrevealer.appspot.com/reveal?url=%s
+
+  sil bmark -T src -k i -t 'img: ddg' ddg.gg/?q=!i%20%s
+  sil bmark -T src -k j -t 'img: google' ddg.gg/?q=!gi%20%s
+  sil bmark -T src -k k -t 'img: tineye' ddg.gg/?q=!tineye%20%s
+  sil bmark -T src -k v -t 'vid: youtube' ddg.gg/?q=!yt%20%s
+
+  sil bmark -T src -k d -t 'dic: pt, priberam' ddg.gg/?q=!dlpo%20%s
+  sil bmark -T src -k e -t 'dic: en, farlex' ddg.gg/?q=!d%20%s
+  sil bmark -T src -k w -t 'ref: wiki' ddg.gg/?q=!w%20%s
+
+  elif prefs.get('bw.ts').substring(6,8) != 01
+  se! bw.updates.marks.month&
+
+  fi
+
+  if prefs.get('bw.updates.marks.week') < 1
+  se! bw.updates.marks.week+=1
+
+  se! bw.qmarks.international='drudgereport.com'
+  se! bw.qmarks.international+=' | twitter.com/realDonaldTrump'
+  se! bw.qmarks.international+=' | twitter.com/HNIJohnMiller'
+  se! bw.qmarks.international+=' | youtube.com/channel/UCifzRVl4nx5dZOYiuM7Q2HQ'
+  se! bw.qmarks.international+=' | theconservativetreehouse.com'
+  se! bw.qmarks.international+=' | quodverum.com'
+
+  se! bw.qmarks.national='blogdoolavo.com'
+  se! bw.qmarks.national+=' | olavodecarvalhofb.wordpress.com/category/notas'
+  se! bw.qmarks.national+=' | mobile.twitter.com/jairbolsonaro'
+  se! bw.qmarks.national+=' | mobile.twitter.com/filgmartin'
+  se! bw.qmarks.national+=' | mobile.twitter.com/BlogDoPim'
+  se! bw.qmarks.national+=' | mobile.twitter.com/flaviomorgen'
+  se! bw.qmarks.national+=' | mobile.twitter.com/sensoinc'
+  se! bw.qmarks.national+=' | mobile.twitter.com/lsentoes'
+  se! bw.qmarks.national+=' | mobile.twitter.com/AconteceCaralho'
+  se! bw.qmarks.national+=' | mobile.twitter.com/JoelAlexandreM'
+  se! bw.qmarks.national+=' | mobile.twitter.com/terca_livre'
+  se! bw.qmarks.national+=' | mobile.twitter.com/conexaopolitica'
+  se! bw.qmarks.national+=' | mobile.twitter.com/joicehasselmann'
+  se! bw.qmarks.national+=' | conexaopolitica.com.br'
+  se! bw.qmarks.national+=' | tercalivre.com.br'
+  se! bw.qmarks.national+=' | s1n7ese.com'
+
+  elif prefs.get('bw.ts').substring(14) != 2
+  se! bw.updates.marks.week&
+
+  fi
+
+ ".once
+
+  if prefs.get('bw.updates.marks.once') < 1
+  se! bw.updates.marks.once+=1
+
+  delbm! | feedkeys -m prompt yes<cr>
+
+  fi
+
+  "qmarks
+  sil exe 'qma N ' + prefs.get('bw.qmarks.international')
+  sil exe 'qma O ' + prefs.get('bw.qmarks.national')
+  sil exe 'qma P ' + prefs.get('bw.qmarks.humor')
+
+"mappings
+
+  gr! maps | gr maps
+
+ ".leaders
+
+  map -m n s <l1>
+
+ ".base/main
+
+  map -m base <a-i> <cr>
+  map -m base <a-e> <cr>
+  map -m base <a-p> <esc>
+
+  map -m main <c-v> <pass>
+  map -m main <c-z> <pass>
+  map -m main <a-o> -ex st
+  map -m main <a-s-o> -ex stopa
+
+  map -m main <a-h> <left>
+  map -m main <a-j> <down>
+  map -m main <a-k> <up>
+  map -m main <a-l> <right>
+
+  map -m main <a-g> <home>
+  map -m main <a-s-g> <end>
+  map -m main <a-s-h> <a-left>
+  map -m main <a-s-j> <a-down>
+  map -m main <a-s-k> <a-up>
+  map -m main <a-s-l> <a-right>
+
+  "fixes
+  map -m base <f3> <nop>
+  map -m base <s-f3> <nop>
+  map -m base <c-w> <nop>
+
+ ".command
+
+  map -m command <a-y> -ex norm! y
+  map -m v,text-edit <a-t> <esc>
+  map -m v <a-h> -ex norm! h
+  map -m v <a-j> -ex norm! j
+  map -m v <a-k> -ex norm! k
+  map -m v <a-l> -ex norm! l
+
+ ".normal
+
+  "main
+  map -b -m n ç :
+  map -b -m n C <esc><esc><esc>i<esc><esc><esc>i<esc>i
+  map -b -m n i <c-v>
+  map -b -m n I <c-z>
+
+  map -b -m n <a-.> @@
+  map -b -m n A @
+  map -b -m n -a Q -j commands.execute('reg '+(arg=='Q'?'':arg))
+
+  "tabs
+  map -b -m n x :t! 
+  map -b -m n X y:t! <c-t>p<c-[>
+  map -b -m n U -j undoCloseWindow()
+  map -b -m n eu :u 
+
+  map -b -m n eb :ls 
+  map -b -m n eg -ex ec document.title
+  map -b -m n eG -ex pa
+  map -b -m n eh :hs 
+  map -b -m n eH :hs! 
+  map -b -m n ej -ex ju
+  map -b -m n ey -ex y buffer.doc.location.host;
+
+  map -b -m n gr -ex reloada
+  map -b -m n gR -ex reloada!
+  map -b -m n gt :tab 
+  map -b -m n gx :bg tab 
+  map -b -m n gw :wind 
+  map -b -m n gm :em 
+  map -b -m n gM -ex mes
+
+  map -b -m n cd :bd! 
+  map -b -m n cD :bd 
+  map -b -m n ch -ex exe ':hs ' + buffer.doc.location.host
+  map -b -m n cH -ex exe ':hs! ' + buffer.doc.location.host
+  map -b -m n cg -j CommandExMode().open('hs ' + buffer.doc.location.host + '/')
+  map -b -m n cG -j CommandExMode().open('hs! ' + buffer.doc.location.host + '/')
+  map -b -m n ci -j CommandExMode().open('Xo site:' + buffer.doc.location + ' ')
+  map -b -m n cI -j CommandExMode().open('Xt site:' + buffer.doc.location + ' ')
+  map -b -m n gci -j CommandExMode().open('Xx site:' + buffer.doc.location + ' ')
+  map -b -m n cj <c-i>
+  map -b -m n ck <c-o>
+  map -b -m n cJ ]d
+  map -b -m n cK [d
+  map -b -m n cp -ex pin!
+" map -b -m n cm -ex tabm <count>
+  map -b -m n -a cm -j
+  \(/[$l]/i.test(arg))?commands.execute('tabm '+tabs.allTabs.length):commands.execute('tabm '+count)
+  map -b -m n cM :tabm 
+  map -b -m n ct -ex <count>tabdu
+" map -b -m n cT -ex <count>tabdu!
+  map -b -m n cx -ex <count>tabdu!
+  map -b -m n cu -j CommandExMode().open('Xo site:' + buffer.doc.location.host + ' ')
+  map -b -m n cU -j CommandExMode().open('Xt site:' + buffer.doc.location.host + ' ')
+  map -b -m n gcu -j CommandExMode().open('Xx site:' + buffer.doc.location.host + ' ')
+  map -b -m n cw -ex tabde
+  map -b -m n cW :taba 
+
+  map -b -m n c, <c-p>
+  map -b -m n cl <c-n>
+  map -b -m n cc <c-^>
+  map -b -m n g, g0
+  map -b -m n gl g$
+
+  map -b -m n ,m :em Tile.Assign Tab.
+  map -b -m n -a , -j
+  \if (/[hjkl]/.test(arg)) CommandExMode().open('S '+arg+' ')
+  \else if (/[HJKL]/.test(arg)) commands.execute('S! '+arg.toLowerCase())
+  \else if (/[otxw]/i.test(arg)) CommandExMode().open('X'+arg+' ')
+
+  "marks
+  map -b -m n v :bmark 
+  map -b -m n V A
+  map -b -m n ev :bmarks 
+  map -b -m n eV :bmarks! 
+  map -b -m n em :marks 
+  map -b -m n eM :qmarks 
+  map -b -m n ew :wind bmarks! 
+
+  "nav
+  map -b -m n S <c-p>
+  map -b -m n ss <c-n>
+  map -b -m n gS g0
+  map -b -m n gs g$
+  map -b -m n a <c-^>
+" suggested; troubled
+  map -b -m n -c cs -ex tabm +<count>
+  map -b -m n -c cS -ex tabm -<count>
+
+  map -b -m n j <c-d>
+  map -b -m n k <c-u>
+
+  map -b -m n <a-h> h
+  map -b -m n <a-l> l
+  map -b -m n <a-j> j
+  map -b -m n <a-k> k
+
+  map -b -m n J L
+  map -b -m n K H
+  map -b -m n gJ -ex fo!
+  map -b -m n gK -ex ba!
+
+  map -b -m n A ;F
+
+  "ex/set
+  map -b -m n <l1>j -j
+  \ commands.execute('se! javascript.enabled!');
+  \ commands.execute('se! javascript.enabled?');
+  map -b -m n <l1>m -ex se! media.autoplay.enabled!
+  map -b -m n <l1>n -ex noh | norm! ilh<esc>
+  map -b -m n <l1>o -ex se online
+
+  "styles
+  map -b -m n <l1>p :pagest
+  map -b -m n <l1>u se um!
+  map -b -m n <l1>s -ex sty
+  map -b -m n <l1>S :styt! -g 
+  map -b -m n <l1>i -ex styt -g sty-chrome -n images.hide
+  map -b -m n <l1>I -ex styt -g sty-chrome -n images.remove
+  map -b -m n <l1>| -ex styt -g sty-chrome -n margin.reduce
+  map -b -m n <l1>O -ex styt -g sty-sites -n overlays
+
+  "other
+  map -b -m n <l1>d -ex dl
+
+  "addons
+  map -b -m n <l1>k <pass><c-a-r>
+" map -b -m n <l1>m <pass><c-s-m>
+
+ ".output-multiline
+
+  map -b -m output-multiline h 18h
+  map -b -m output-multiline j 18j
+  map -b -m output-multiline k 18k
+  map -b -m output-multiline l 18l
+
+  map -b -m output-multiline c -ex normal! i
+
+ ".input
+
+  "general
+  map -m input <a-w> <c-t>
+" map -m c <a-p> <esc>
+
+  "insert
+  map -b -m ex,insert,file-input <a-d><a-d> -j commands.execute('sil Time'); editor.editor.insertText(prefs.get('bw.ts'))
+  map -b -m ex,insert,file-input <a-c><a-c> -j commands.execute('sil Time'); editor.editor.insertText(prefs.get('bw.ts62'))
+
+  "hints
+  map -m hints <a-h> -ex norm! h
+  map -m hints <a-j> -ex norm! j
+  map -m hints <a-k> -ex norm! k
+  map -m hints <a-l> -ex norm! l
+  map -m hints <c-e> -ex norm! <c-e>
+  map -m hints <c-y> -ex norm! <c-y>
+  map -m hints <C-d> -ex norm! <C-d>
+  map -m hints <C-u> -ex norm! <C-u>
+  map -m hints <C-f> -ex norm! <C-f>
+  map -m hints <C-b> -ex norm! <C-b>
+
+  "menu
+  map -m menu <s-h> <left>
+  map -m menu <s-j> <down>
+  map -m menu <s-k> <up>
+  map -m menu <s-l> <right>
+  map -m menu <s-e> <cr>
+  map -m menu <s-i> <cr>
+
+ ".video
+
+  map -b -m n <l1>v -j modes.push(modes.VIDEO)
+
+" map -b -m vid a -ex YtPlay
+" map -b -m vid s -ex YtPause
+" map -b -m vid S -ex YtStop
+  map -b -m vid <a-s> -ex bufdo YtPause
+
+  map -b -m vid <a-,> -ex YtSeek -1
+  map -b -m vid <a-l> -ex YtSeek 1
+  map -b -m vid , -ex YtSeek -5
+  map -b -m vid l -ex YtSeek 5
+  map -b -m vid -c d -j commands.execute("exe 'YtSeek "+30*(count ? count:1)+"'");
+  map -b -m vid -c u -j commands.execute("exe 'YtSeek -"+30*(count ? count:1)+"'");
+  map -b -m vid -c <s-,> -j commands.execute("exe 'YtSeek -"+60*(count ? count:1)+"'");
+  map -b -m vid -c L -j commands.execute("exe 'YtSeek "+60*(count ? count:1)+"'");
+
+"macros
+
+  gr! macros | gr macros
+
+  "up, down
+  js editor.setRegister('u','gg1000<A-m>s')
+  js editor.setRegister('v','G1000<A-m>s')
+
+"abbrevs
+
+  gr! abbr | gr abbr
+
+  ca b.j bruno.junqueira@msn.com
+  ia b.j bruno.junqueira@msn.com
+
+  ca b.g bruno.gasparin@msn.com
+  ia b.g bruno.gasparin@msn.com
+
+"styles
+
+ ".chrome
+
+  gr! sty-chrome | gr sty-chrome
+
+  sty -n view-source view-source:* * {background: black; color: white;}
+  sty -n view-source -a view-source:* span {white-space: pre-wrap; word-wrap: break-word;}
+  sty -n view-source -a view-source:* [color:black] {color: white !important;}
+  sty -n view-source -a view-source:* .attribute-name {color: white !important;}
+ 
+  "manipulation
+  sty -n images.hide http*,about:* img {visibility: hidden !important;}
+  sty -n images.remove http*,about:* img {display: none !important;}
+  sty -n margin.reduce http* body {padding: 0 10em !important;}
+
+  styd! -g sty-chrome
+  stye -g sty-chrome -n view-source
+
+ ".sites
+
+  gr! sty-sites | gr sty-sites
+
+  "all sites
+  sty -n overlays http(s)?://.* [class*=overlay],[class*=modal] {display: none !important;}
+  sty -n google.translate http(s)?://.* .skiptranslate {display: none !important;}
+  styd -n overlays
+
+  "some sites
+  sty -n outlook outlook(.live)?.com ._n_h {right: 0 !important;}
+  sty -n outlook outlook(.live)?.com -a a#GoToNextRegion {right: 0 !important;}
+  sty -n outlook outlook(.live)?.com -a a#GoToNextRegion+div {right: 0 !important;}
+  sty -n drudge drudgereport.com :not(font) {background: black !important; color: white !important;}
+  sty -n twitter twitter.com [data-testid='sidebarColumn'] {display: none !important;}
+  sty -n oantagonista www.oantagonista.com [id*=onesignal] {display: none !important;}
+
+"tmp !
+
+" Encontrar meio de usar o comando ;? com todas as tags e depois
+" resetando 'eht[?]' depois.
+
+" Sugiro registrar as cinco ou dez últimas ações no modo normal em
+" um registro especial e usar isto para reproduzir a tecla  ".".
+" Ex: 'Reg £: (d)(cs)(gu)(<c-p>)'; a função leria uma contagem e o
+" conteúdo do parêntese correspondente, permitindo reproduzir um d
+" dos últimos cinco ou dez movimentos. Fácil.
+
+  map -b -m n -a -g maps <l1>a -j
+  \ if      (arg=='n') { v='0123456789' }
+  \ else if (arg=='a') { v='acdefijklmnopqrswxz' }
+  \ else if (arg=='A') { v='abcdefghijklmnopqrstuvwxyz' }
+  \ else if (arg=='e') { v='asdfgqwertzxcvb' }
+  \ else if (arg=='d') { v='uiopjklçnm' }
+  \ else if (arg=='h') { v='asdfghjklç' }
+  \ commands.execute('se hk='+v);
+
+" com! AltF -j
+" \ commands.execute('se hintkeys=abcdefghijklmnopqrstuvwxyz');
+" \ commands.execute('norm! f');
+" \ commands.execute('se hintkeys&')
+
+  com! SaveBmarks,Sb -nargs * -j
+  \ type = {f:'fin',i:'inf',j:'jus',o:'oth',p:'prs'}
+  \ commands.execute(
+  \'!echo '+args[1]+' >> ~/bmarks.'+type[args[0]]+'.pen')
+  map -g maps -b -m n -a <a-s> -j commands.execute('sil Sb '+arg+' '+buffer.URL)
+
+  map -g maps -b -m n sf /
+  map -g maps -b -m n sF ?
+
+  map -g maps -m command-line -b -a <a-@> -ex norm! @<arg>
+
+" ey: a mapping/command to yank part of a url or the title
+" cy: ...?
+" gy: yank topmost domain?
+"  y: ...?
+
+" a command to edit on vim all input fields at once
+" displaying '^<fieldName>:\t[<default input>]'
+
+"fixes
+
+  gr fix | gr! fix
+
+" Why do I need this?
+  map -m ex <a-p> <esc>
+  map -m prompt <a-p> <esc>
+
+"profiles
+
+ "inf-tads
+  if prefs.get('bw.profile') == 'inf.tads'
+
+  if (/0[1267]/.test(prefs.get('bw.ts').substring(4,6) &&
+  \   prefs.get('bw.updates.profiles.ocasional') < 1)
+  \  || prefs.get('bw.updates.profiles.applied') != 'yes'
+  se! bw.updates.profiles.ocasional+=1
+
+  ec 'Because it is the beggining of february, remember this bookmarks.'
+  bmarks! -T :remember
+
+  el
+  se! bw.updates.profiles.ocasional&
+
+  fi
+
+  fi
+
+"final
+
+  gr! final | gr final
+
+ ".scheduled
+
+  "monthly
+  if (prefs.get('bw.ts').substring(6,8) == 01 &&
+  \   prefs.get('bw.updates.final.month') < 1)
+  \  || prefs.get('bw.updates.final.applied') != 'yes'
+  se! bw.updates.final.month+=1
+  se! bw.updates.final.applied='yes'
+
+  extupdate!
+  se! bw.updates.final.month+=1
+  tabopen palemoon.org/releasenotes.shtml
+  version
+
+  elif prefs.get('bw.ts').substring(6,8) != 01
+  se! bw.updates.final.month&
+
+  fi
+
+ ".addons
+
+  if prefs.get('bw.updates.final.once') < 1
+  se! bw.updates.final.once+=1
+
+  "Adblock Latitude
+  exta https://addons.palemoon.org/?component=download&id=adblocklatitude@addons.palemoon.org&version=5.0.1&hash=a07b935e80046a46f7762121b844fcb8b08d68c3db13e3957c5430e322328357
+
+  "Moon PDF Viewer
+" exta https://addons.palemoon.org/?component=download&id=MoonPDFViewer@Off.JustOff&version=1.0.2&hash=61e08d6a2480ac7cb066dfa54db0e9352bbae89db8b84ef5829e970141a2737b
+
+  "PDF Viewer
+  exta https://github.com/IsaacSchemm/pdf.js-seamonkey/releases/download/v2.0.961/pdf.js.xpi
+
+  "Moz Archiver
+  exta https://addons.palemoon.org/?component=download&id=mozarchiver@lootyhoof-pm&version=1.0.2&hash=8981f685c184b97a91e4f9ea92b7ed8e8041fd493fc729ce4c5235e9d1ef5c6b
+
+  "Reader View
+  exta https://addons.palemoon.org/?component=download&id={1111dd1e-dd02-4c30-956f-f23c44dfea8e}&version=2.1.0&hash=0a8acb88d4bf4bbb3854688ef1d60b2d2102dff805132d655563cc2aac419590
+
+  "Tile Tabs
+  exta https://github.com/TarekJor/Firefox-52-ESR-legacy-addon/raw/master/xpi/tile_tabs-14.12-fx.xpi
+
+" very clumsy; better change
+  js setTimeout(() => commands.execute('Restart'),30000);
+
+  fi
+
+ ".message
+
+  sil Time
+  echom 'Load time: '+prefs.get('bw.ts62.save')+'~'+prefs.get('bw.ts62')

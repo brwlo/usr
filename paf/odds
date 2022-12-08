@@ -1,0 +1,5 @@
+#!/bin/bash
+[ "$1" ] && n=1 || n=0
+while read l; do let i++
+  (( $i % 2 != $n )) && echo $l
+done

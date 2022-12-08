@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/local/bin/vim --cmd 'se rtp^=$cfg/vim/ viminfo+="n~$dat/vim/viminfo"' "$@"

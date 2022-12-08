@@ -1,0 +1,14 @@
+" fixes.pen
+
+gr! fixes | gr fixes
+
+" prevents installation of valence and ADBHelper?
+" https://forum.palemoon.org/viewtopic.php?t=18681
+  se! devtools.webide.enabled=false
+  se! devtools.webide.autoinstallADBHelper=false
+  se! devtools.webide.autoinstallFxdtAdapters=false
+  se! devtools.webide.autoConnectRuntime=false
+
+if /win/i.test(window.navigator.platform)
+  au Leave .* exe '!@echo off && del /Q /F "' + prefs.get('bw.penta.cache') + '"'
+fi

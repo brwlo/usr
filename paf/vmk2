@@ -1,0 +1,9 @@
+#!/bin/bash
+
+[ "$1" = :t ] && { exp=${2:-32}; shift; shift; }
+for i in `seq 1 $1`; do fmt+=,\$$i; done ; shift
+
+awk '
+  { RS="\n\n"; FS="[\t\n]+" }
+  { printf "%s\t%s\t%s\t%s\n"'$fmt' }
+' $1|sed -E 's/\t+/\t/g'|expand -t ${exp:-32}|fro 2

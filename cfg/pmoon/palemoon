@@ -1,0 +1,7 @@
+#!/bin/bash
+TMPDIR=$tm/tmpfiles
+dir=$vm/palemoon/profiles
+[ -d "$dir/$1" ] && exec /usr/bin/palemoon \
+  -profile "$dir/$1" --no-remote --pentadactyl \
+  "+purgecaches ++cmd 'se rtp=$cm/pen | se! bw.profile=$1 | lpl (js|pen)$'" \
+  ${@:2}

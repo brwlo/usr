@@ -1,0 +1,20 @@
+#!/bin/bash
+
+dir=/sys/class/backlight/intel_backlight
+now=`cat $dir/brightness`
+max=937
+mid=468
+min=10
+
+[ $1 = s ] && echo `echo 100\*"$now/$max"|bc :`% && exit
+[ $1 = S ] && echo `echo 100\*"$now/$max"|bc :`  && exit
+[ $1 = u ] && (( new=$now+50 ))
+[ $1 = d ] && (( new=$now-50 ))
+[ $1 = M ] && new=$max
+[ $1 = h ] && new=$mid
+[ $1 = m ] && new=$min
+
+[ $new -gt $max ] && new=$max
+[ $new -lt $min ] && new=$min
+
+echo $new 2>/dev/null|sudo tee $dir/brightness

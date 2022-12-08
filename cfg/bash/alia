@@ -1,0 +1,17 @@
+# bash/alia
+
+complete -cf man sudo which k wat x see xargs xx x, x. ts fd r do
+
+#alias diff='diff --color'
+alias df='df -h'
+alias du='du -h'
+alias grep='grep --color=auto'
+alias ip='ip -c'
+alias la='ls -la --color=auto'
+alias ll='ls -l  --color=auto'
+alias ls='ls     --color=auto'
+alias reload='PATH=$PATH . $cfg/bash/rc'
+
+alias startx="startx $XINITRC"
+
+# tmp

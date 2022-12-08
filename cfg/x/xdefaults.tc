@@ -1,0 +1,31 @@
+Aterm*scrollBar: true
+Aterm*transparent: true
+Aterm*title: Terminal
+Aterm*foreground: white
+Aterm*background: black
+Aterm*font: fixed
+Aterm*cursorColor: green
+Aterm*fading: 70
+Aterm*shading: 50
+Aterm*color12: DodgerBlue1
+Aterm*saveLines: 1000
+!fltk*scheme: gtk+
+!Xft.dpi: 96.0
+
+urxvt*scrollBar: false
+urxvt*transparent: false
+urxvt*title: urxvt
+urxvt*foreground: white
+urxvt*background: black
+urxvt*font: *-fixed-*-*-*-18-*
+urxvt*cursorColor: red
+urxvt*fading: 70
+urxvt*shading: 50
+urxvt*color12: DodgerBlue1
+urxvt*saveLines: 100000
+fltk*scheme: gtk+
+Xft.dpi: 120.0
+
+Xft.dpi: 118
+Urxvt.fontSize: 14
+URxvt.font: xft:Droid Sans Mono:size=8:antialias=true

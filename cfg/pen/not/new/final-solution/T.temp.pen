@@ -1,0 +1,10 @@
+if (!modes.NAV) { modes.addMode( "NAV", { char: "nav", description: "bw nav", bases: [modes.NORMAL] }, "") }
+if (!modes.TAB) { modes.addMode( "TAB", { char: "tab", description: "bw tab", bases: [modes.NORMAL] }, "") }
+if (!modes.HIS) { modes.addMode( "HIS", { char: "his", description: "bw his", bases: [modes.NORMAL] }, "") }
+if (!modes.HOR) { modes.addMode( "HOR", { char: "hor", description: "bw hor", bases: [modes.NORMAL] }, "") }
+
+function modeToggle([modes]) {
+	let i=modes.indexOf(dactyl.mode)
+	dactyl.mode=modes[(i+1)%modes.length] }}
+
+// map -b -m n h -j modeToggle(["NAV","TAB"])

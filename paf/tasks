@@ -1,0 +1,31 @@
+#!/bin/bash
+cd $dat/tsk
+today=`date '+%Y%m%d'`
+morow=`date -d tomorrow '+%Y%m%d'`
+[ "$1" = h ] && echo 'tasks [huewng:] [<Ymd> <Ymd>]'
+[ "$1" = u ] && grep -E '^([-~!:]|$)' ${2:-$today}.tasks|cut -c2- >${3:-$morow}.tasks
+[ "$1" = e ] && vim $today.tasks
+[ "$1" = w ] && vim week.plan
+[ "$1" = : ] && D && tasks | grep -E "$2"
+[ "$1" = g ] && tasks | grep "$2"
+#[ ! $1    ] &&	echo -e `date '+%Y-%m-%d'`'\e[1;31m' && cat $today.tasks
+[ ! "$1"   ] && {
+  jus='\\e[35m' mar='\\e[32m' mkt='\\e[31m' # mag pnk mag
+  pli='\\e[34m' prs='\\e[33m' tfg='\\e[36m' # blu ylw cya
+  end='\\e[30m' def="\\$txt"                # gra whi
+  D && sed -E 's/\t/\0/g' $today.tasks|
+  while IFS='' read a b c; do
+    [ "$b" ] && b=${b//	/} && b=${!b}$b
+    echo -e "`echo -e "$a\t$b\t$txt$c$txt"`"
+  done | grep -vE '^[=x:]'; }
+[ "$1" = n ] && e $dat/tsk/todo.tasks
+
+[ "$1" = s ] && {
+  shopt -s lastpipe
+  <schd.tasks sort -k2|nl|sed 's/^[ \t]*//'|
+  expand -t 4|dmenu -p sched -l 10|read nl rest
+  [ "$nl" ] && sed -i "${nl}d" schd.tasks; }
+[ "$1" = S ] && {
+  echo|dmenu -p sched+|while read nam date rest
+  do echo -e "\t$nam\t$date\t$rest" >>schd.tasks
+  done; }

@@ -1,0 +1,2 @@
+#!/bin/bash
+eval bmk pgs ${1:-":g 2|xi"}

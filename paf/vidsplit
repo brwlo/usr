@@ -1,0 +1,8 @@
+#!/bin/bash
+exec <$1
+read file
+read opts
+ffmpeg="ffmpeg -nostdin -hide_banner -n"
+while read ln; do [ "$a" ] &&
+  echo ts $ffmpeg -i $file  -ss $a -to $ln ${2:-.}/parte-$k.${file##*.}
+  a=$ln; let j++; k=`printf '%02d' $j`; done

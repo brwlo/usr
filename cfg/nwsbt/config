@@ -1,0 +1,5 @@
+auto-reload             yes
+reload-threads          50
+external-url-viewer     "urlview"
+
+macro w open-in-browser

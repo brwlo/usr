@@ -1,0 +1,10 @@
+#!/bin/bash
+PATH=$opath
+sxiv -o ${@:-*}
+
+##!/bin/bash
+#PATH=$opath
+#args=$@
+#[ "$1" ] &&
+#  { args+=' '*; args=${args/$@/}; }
+#echo sxiv -o $args

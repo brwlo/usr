@@ -1,0 +1,10 @@
+#!/bin/bash
+
+mt2 blu3 2>/dev/null
+
+[ "$1" = : ] || n=n
+
+excl='mnt|out|crp|ram|var|mid'
+for i in `ls $usr|grep -vE "$excl"`; do
+  sudo rsync -av$n --delete $usr/$i/ $mnt/blu3/usr/$i
+done

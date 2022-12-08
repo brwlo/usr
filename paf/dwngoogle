@@ -1,0 +1,12 @@
+#!/bin/bash
+# medium.com/@acpanjan/download-google-drive-files-using-wget-3c2c025a8b99
+
+shopt -s lastpipe
+echo $1|grep -oE '/(d|folders)/.*/?'|
+  sed -E 's:/.*/(.*)/?:\1:'|read id
+
+wget --no-check-certificate -O $2\
+  'https://docs.google.com/uc?export=download&id='$id
+
+# large files (not ready)
+# wget--load-cookies/tmp/cookies.txt"https://docs.google.com/uc?export=download&confirm=$(wget--quiet--save-cookies/tmp/cookies.txt--keep-session-cookies--no-check-certificate'https://docs.google.com/uc?export=download&id=FILEID'-O-|sed-rn's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=FILEID"-OFILENAME&&rm-rf/tmp/cookies.txt

@@ -1,0 +1,3 @@
+#!/bin/bash
+x yt-fzf 2>&1 >/dev/null
+$term -e y

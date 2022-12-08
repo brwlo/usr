@@ -1,0 +1,21 @@
+TODO: this is not ready yet.
+
+to create a "remastered" bootable usb:
+
+1. extract "core.gz" ('tis the initramfs) from the downloaded image
+ - use gunzip and cpio
+ - make changes
+
+2. copy contents of image to a directory
+ - vmlinuz - the kernel
+ - /boot/isolinux etc.
+
+3. compress "core.gz" again with cpio and gzip
+
+4. mv core.gz to same dir as vmlinuz etc.
+
+5. mkisofs ...
+
+
+~ software required:
+- syslinux, mkisofs, isohybrid, squashfs-tools

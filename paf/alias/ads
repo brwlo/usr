@@ -1,0 +1,2 @@
+#!/bin/bash
+eval bmk ads ${1:-":g 2|xi"}

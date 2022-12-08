@@ -1,0 +1,26 @@
+" addons.once.pen
+
+" run only once, during profile creation
+
+  gr! addons | gr addons
+
+  "Adblock Latitude
+  exta https://addons.palemoon.org/?component=download&id=adblocklatitude@addons.palemoon.org&version=5.0.1&hash=a07b935e80046a46f7762121b844fcb8b08d68c3db13e3957c5430e322328357
+
+  "Moon PDF Viewer
+" exta https://addons.palemoon.org/?component=download&id=MoonPDFViewer@Off.JustOff&version=1.0.2&hash=61e08d6a2480ac7cb066dfa54db0e9352bbae89db8b84ef5829e970141a2737b
+
+  "PDF Viewer
+  exta https://github.com/IsaacSchemm/pdf.js-seamonkey/releases/download/v2.0.961/pdf.js.xpi
+
+  "Moz Archiver
+  exta https://addons.palemoon.org/?component=download&id=mozarchiver@lootyhoof-pm&version=1.0.2&hash=8981f685c184b97a91e4f9ea92b7ed8e8041fd493fc729ce4c5235e9d1ef5c6b
+
+  "Reader View
+  exta https://addons.palemoon.org/?component=download&id={1111dd1e-dd02-4c30-956f-f23c44dfea8e}&version=2.1.0&hash=0a8acb88d4bf4bbb3854688ef1d60b2d2102dff805132d655563cc2aac419590
+
+  "Tile Tabs
+  exta https://github.com/TarekJor/Firefox-52-ESR-legacy-addon/raw/master/xpi/tile_tabs-14.12-fx.xpi
+
+" very clumsy; better change
+  js setTimeout(() => commands.execute('Restart'),30000);

@@ -1,0 +1,10 @@
+#!/bin/bash
+tce-load -i rtorrent-0.9.8
+tce-load -i libtorrent-0.13.8
+
+dir=$mnt/ssd4/opt/tmp/
+mkdir -p $dir/rtorrent
+home=$HOME HOME=$dir
+dwn=$dir ses=$dir
+
+prefix rtorrent -d $dwn -s $ses $@

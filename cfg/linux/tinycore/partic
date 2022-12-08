@@ -1,0 +1,15 @@
+# tinycore/partic
+
+[ $SHLVL -ne 1 ] && return
+
+export TZ='America/Sao_Paulo'
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+export TCE=/etc/sysconfig/tcedir
+
+sudo loadkmap < /usr/share/kmap/qwerty/br-abnt2.kmap
+#sudo $cfg/keyboard/ldkeys
+#net -a &
+
+ff :R bw
+tcstart vbeg vfon vmid voth &

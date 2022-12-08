@@ -1,0 +1,2 @@
+#!/bin/bash
+cd $mid/man/cheatsheets && fd -tf|dmenu|sxiv -
