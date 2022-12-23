@@ -162,7 +162,7 @@ map ..rD $mv -b $f `d`.`bn $f`
 map ..v  $ts vidreduce $f
 map ..D  :delete
 map ..F  $lnk2 fin $f
-map ..G  $lnk2 git $f
+map ..G  $lnk2 src $f
 map ..R  $lnk2 ram $f
 map ..w  $lnk2 wrk $f
 map ..W  $lnk2 web $f

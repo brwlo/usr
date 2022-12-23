@@ -1,0 +1,3 @@
+#!/bin/bash
+git config --global user.email 'bruno.gasparin@msn.com'
+git config --global user.name  'brwlo'

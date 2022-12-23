@@ -1,0 +1,2 @@
+#!/bin/bash
+cd $usr; git add -A; git commit -m "update: `t`"; git push origin

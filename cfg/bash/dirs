@@ -22,10 +22,10 @@ for i in $usr/*; do
        [ -e "$ram" ] || ln -s $var/wrk $usr/ram
        [ -e "$crp" ] || ln -s $var/crp $usr/crp
        [ -e "$wrk/.var" ] || ln -s $var/wrk $wrk/.var ;;
-  ram) [ -e $ram/drv ] ||
-          ln -s $mnt/ssd4/opt/ram $ram/drv; continue ;;
-    *) mkdir -p $git/.${i##*/}
-       [ -e "$i/git" ] || ln -s $git/.${i##*/} $i/git
+   ram) [ -e $ram/drv ] ||
+           ln -s $mnt/ssd4/home/tc/ram $ram/drv; continue ;;
+    *) mkdir -p $src/.${i##*/}
+       [ -e "$i/src" ] || ln -s $src/.${i##*/} $i/src
        mkdir -p $mid/.${i##*/}
        [ -e "$i/mid" ] || ln -s $mid/.${i##*/} $i/mid
        mkdir -p $wrk/.${i##*/}

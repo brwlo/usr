@@ -2,9 +2,10 @@
 scripte utf-8
 
 " settings
-" let DAT=system("printf '%s' $dat/vim")
-cal system("mkdir -p $mnt/ssd4/opt/dat/bkp $mnt/ssd4/opt/dat/swp $mnt/ssd4/opt/dat/und")
-let DAT=system("printf '%s' $mnt/ssd4/opt/dat/vim")
+let DAT=system("printf '%s' $dat/vim")
+"cal system("mkdir -p $mnt/ssd4/home/dat/bkp $mnt/ssd4/home/dat/swp $mnt/ssd4/home/dat/und")
+cal system("mkdir -p $ram/vim/bkp $ram/vim/swp $ram/vim/und")
+let DAT=system("printf '%s' $ram/vim/")
 let CFG=system("printf '%s' $cfg/vim/")
 let &runtimepath=CFG.','.DAT.','.&runtimepath
 
