@@ -25,5 +25,6 @@ v: pos v: saved
 : save    pos @ saved ! ;
 : restore saved @ pos ! ;
 : where   'slurp @ pos @ + ;
-: walk    where c@ fwd ;
+: chr     where c@ ;
+: walk    chr fwd ;
 : end     pos @ #slurp @ = ;
