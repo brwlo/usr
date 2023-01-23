@@ -2,7 +2,6 @@
 cc warnings off
 : empty  s" ---marker--- marker ---marker---" evaluate ;
 : run    s" 000.4th" included ;
-marker ---marker---
 
 \ aux
 : str++  here swap dup >r move here r> str+ ; ( string join fix )
@@ -25,12 +24,14 @@ marker ---marker---
 : -fblk  number cnt @ 0= if 0 make number then ;
 : msg    page ." CURRENT FILE BLOCKS" ;
 : fbls   -fblk msg odir begin dfile until cdir ;
-: fbnew  number cnt @ edit ;
+: fbnew  number cnt @ ;
 : fbld   #fname included ;
+\ : fbfind -fblk msg odir begin until ;
 
 \ utils
 v: cur
 : ls  fbls ;
 : ..  cur @ edit run ;
 : ,,  cur ! .. ;
-: .+  fbnew ;
+: .+  fbnew edit ;
+marker ---marker---

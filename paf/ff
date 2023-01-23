@@ -4,7 +4,8 @@
 
 
 home=$HOME HOME=$var/ffox
-bkp="$dat/mid/ffox/profiles"
+# bkp="$dat/mid/ffox/profiles"
+sudo mount /dev/sda3 $mnt/ssd4; bkp="$mnt/ssd4/opt/ff/profiles" # temporary
 moz=$HOME/.mozilla/firefox
 oth=$dat/ffox/other/
 tri="source --url localhost:8080/cfg/3dac/rc"

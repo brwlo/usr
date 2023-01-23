@@ -1,0 +1,2 @@
+#!/bin/bash
+gforth -e "include $tec/wrk/20221228.bwblocks.4th/lis.4th" $@

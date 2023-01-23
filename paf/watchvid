@@ -1,6 +1,7 @@
 #!/bin/bash
 
-dir=$mid/lst
-[ -e "$dir/"$1* ] && file=$mid/lst/$1* || {
+# dir=$mid/lst
+dir=$var/lst; mkdir -p $dir
+[ -e "$dir/"$1* ] && file=$dir/$1* || {
   yt-dlp -cwi --restrict-filename $2 -o "$dir/$1.%(ext)s" &
   file="$2"; } && mpv $file

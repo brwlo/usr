@@ -8,6 +8,7 @@ while IFS=$'\t' read vol bool uuid opts; do
   sudo mount $opts -U $uuid $labl 2>/dev/null
   shopt -s nullglob
   for i in $labl/usr/*; do 
+    [ "$labl" != ssd4 ] && \ # gambiarra
     [ -e "$labl/$i" ] || ln -st $usr $i
   done 2>/dev/null
 done
