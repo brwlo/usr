@@ -1,3 +1,5 @@
 #!/bin/bash
+[ "$TCE" ] && x tce-load -i python3.9 2>&1 >/dev/null
 [ "$TCE" ] && x tce-load -i yt-dlp >/dev/null && sleep 2
-prefix yt-dlp --restrict-filenames -cwi $@
+#prefix yt-dlp --restrict-filenames -cwi $@
+$paf/bin/yt-dlp --restrict-filenames -cwi $@

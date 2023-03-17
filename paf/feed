@@ -1,0 +1,3 @@
+#!/bin/bash
+[ -e ~/.local/bin/feed ] || { pip3 install TermFeed; clear; }
+BROWSER=links ~/.local/bin/feed $@

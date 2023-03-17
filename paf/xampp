@@ -4,6 +4,7 @@ installer="$paf/bin/xampp-linux-x64-8.1.10-0-installer.run"
 
 case $1 in
   :i) $installer ;;
+  :p) export PATH+="$PATH":$boo/opt/lampp/bin ;;
    *) cd $boo/opt/lampp
       sudo adduser mysql
       sudo adduser daemon

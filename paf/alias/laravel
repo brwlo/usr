@@ -1,0 +1,2 @@
+#!/bin/bash
+$var/xdg/config/composer/vendor/bin/laravel $*

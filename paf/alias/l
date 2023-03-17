@@ -1,0 +1,4 @@
+#!/bin/bash
+x tce-load -i gforth-0.7.3.tcz
+cd $tec/wrk/20221228.lis.4th/
+gforth lis.4th $*

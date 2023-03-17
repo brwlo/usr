@@ -11,8 +11,9 @@ morow=`date -d tomorrow '+%Y%m%d'`
 #[ ! $1    ] &&	echo -e `date '+%Y-%m-%d'`'\e[1;31m' && cat $today.tasks
 [ ! "$1"   ] && {
   jus='\\e[35m' mar='\\e[32m' mkt='\\e[31m' # mag pnk mag
-  pli='\\e[34m' prs='\\e[33m' tfg='\\e[36m' # blu ylw cya
+  pli='\\e[34m' prs='\\e[33m' tec='\\e[36m' # blu ylw cya
   end='\\e[30m' def="\\$txt"                # gra whi
+  hom='\\e[33m'               fin='\\e[36m'
   D && sed -E 's/\t/\0/g' $today.tasks|
   while IFS='' read a b c; do
     [ "$b" ] && b=${b//	/} && b=${!b}$b

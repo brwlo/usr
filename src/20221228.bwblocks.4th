@@ -1,1 +1,0 @@
-/mnt/drv/red2/usr/wrk/.tec/20221228.bwblocks.4th

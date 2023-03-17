@@ -1,2 +1,3 @@
 #!/bin/bash
-rdrview -B links "$@"
+x tce-load -i rdrview
+prefix rdrview -B links "$@"

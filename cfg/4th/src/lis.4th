@@ -1,1 +1,1 @@
-/mnt/drv/red2/usr/wrk/.tec/20221228.bwblocks.4th/lis.4th
+/mnt/drv/red2/usr/wrk/.tec/20221228.lis.4th/lis.4th

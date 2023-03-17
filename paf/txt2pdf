@@ -1,0 +1,2 @@
+#!/bin/bash
+cat $* | iconv -t LATIN1 | groff -Klatin-1 -ms -t -Tpdf

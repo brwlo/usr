@@ -2,6 +2,8 @@
 adr=`xo`
 case $adr in
 *youtube.com/watch*) yt-dlp -e "`xo`" ;;
-*) wget -q -O - "$adr"| sed -n -E \
-   's/^.*<title.*>(.*)<\/title>.*$/\1/p'    ;;
+*) wget -q -O - "`xo`" |
+   tr -d '\n' |
+   grep -oE '<title>.*</title>' |
+   sed -E 's/<\/?title>//g;s/\|/ - /g;s/\&amp;/\&/g' ;;
 esac|tr -d '\200-\377'

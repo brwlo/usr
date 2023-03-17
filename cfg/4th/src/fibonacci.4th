@@ -1,11 +1,12 @@
-empty cc
+( empty cc )
+\ https://groups.google.com/g/comp.lang.forth/c/X3g-b8ApDzE/m/VueTC7FVDQAJ
 
 \ aux
 : ini dup 0< if drop 0 r> drop exit then dup 2 < if drop 1 r> drop exit then ;
 
 \ worst
 : f-1 dup 1- ; : f-2 swap 2 - ;
-: fib recursive ini f-1 fib f-2 fib + ;
+: fib1 recursive ini f-1 fib1 f-2 fib1 + ;
 
 \ better
 : fib recursive ini dup 2 - fib swap 1- fib + ;
